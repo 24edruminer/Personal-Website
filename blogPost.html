@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap" rel="stylesheet">
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title id="page--head--title">Eli's Blog - </title>
         <link rel="stylesheet" class="theme--importer" href="css/blogPost/light.css">
         <link rel="stylesheet" href="css/blogPost/blogPost.css">
+        <link rel="stylesheet" href="css/universal.css">
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
         <script type="text/javascript" src="js/universal.js"></script>
         <script type="text/javascript" src="js/blogPost.js"></script>
     </head>
-    <body>
-        
+    <body onload="universalSetup(); loadFirebasePage(loadedTitle);">
+        <div class="navbar">
+            <a class="navbar--item" href="index.html">Home</a>
+            <a class="navbar--item" href="aboutme.html">About Me</a>
+            <a class="navbar--item navbar--active">Blog Post Testing</a>
+        </div>
+        <h1 id="title">
+            Unloaded title
+        </h1>
+        <p id="body">
+            Unloaded body
+        </p>
     </body>
 </html>

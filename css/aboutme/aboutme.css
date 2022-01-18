@@ -1,0 +1,19 @@
+body {
+    padding-top: 25px;
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3em;
+    margin: 0;
+    padding-top: 32.16px;
+}
+
+h2 {
+    font-family: 'Bebas Neue', cursive;
+    margin: 0;
+}
+
+.body--text {
+    margin: 50px 5%;
+}

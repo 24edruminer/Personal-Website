@@ -1,3 +1,17 @@
+* {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: 450;
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3em;
+}
+
+h2 {
+    font-family: 'Bebas Neue', cursive;
+}
+
 .main {
     width: 80%;
     height: 100vh;
@@ -7,4 +21,54 @@
 .center {
     text-align: center;
     margin: auto;
+}
+
+.navbar {
+    overflow: hidden;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    left: 0;
+    z-index: 999;
+    width: 100%; /* Full width */
+    height: 4vh;
+    display: table;
+    table-layout: fixed;    /* For cells of equal size */
+}
+
+.navbar h1 {
+    margin: 0;
+    padding-top: 32.16px;
+}
+
+.navbar--item {
+    float: center;
+    display: table-cell;
+    text-align: center;
+    font-size: 2em;
+    margin: 0 10px 0 10px;
+}
+
+.navbar--item--container {
+    width: 100px;
+    float: center;
+    text-align: center;
+    align-items: center;
+}
+
+.navbar a { 
+    text-decoration: none;
+    color:  #ccc
+}
+
+.navbar--active {
+    background-color: #a58dce;
+    color: #000 !important;
+}
+
+.navbar {
+    background: #a81f4a
+}
+
+.navbar--selected {
+    background-color: #a71140;
 }

@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap" rel="stylesheet">
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>About Me</title>
         <link rel="stylesheet" class="theme--importer" href="css/aboutme/light.css">
         <link rel="stylesheet" href="css/aboutme/aboutme.css">
+        <link rel="stylesheet" href="css/universal.css">
         <script type="text/javascript" src="js/universal.js"></script>
         <script type="text/javascript" src="js/aboutme.js"></script>
     </head>
-    <body>
-        
+    <body onload="universalSetup()">
+        <div class="navbar">
+            <a class="navbar--item" href="index.html">Home</a>
+            <a class="navbar--item navbar--active">About Me</a>
+            <a class="navbar--item" href="blogPost.html">Blog Post Testing</a>
+        </div>
+        <div class="main">
+            <div class="center">
+                <h1>About Me</h1>
+                <h2>Welcome</h2>
+                <p class="body--text">This is a blog page I made for an OOP project as the final project for the HTML and CSS unit. It uses Firebase, google's semi-free cloud hosting service, to create and access a database to store the blog page text. It then retrieves it and populates a final programmatically. I will use this to keep track of projects I take an interest in and are working on, kind of like a scientific journal.</p>
+            </div>
+        </div>
     </body>
 </html>

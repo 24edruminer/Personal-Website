@@ -1,3 +1,5 @@
+loadedTitle = "title2"
+
 function universalSetup() {
-    console.log("hehehehaha");
 }
+
