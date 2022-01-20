@@ -8,22 +8,29 @@
         <link rel="stylesheet" class="theme--importer" href="css/index/light.css">
         <link rel="stylesheet" href="css/index/index.css">
         <link rel="stylesheet" href="css/universal.css">
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
         <script type="text/javascript" src="js/universal.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <title>Eli's Blog</title>
     </head>
-    <body onload="universalSetup()">
+    <body onload="universalSetup(); populatePostList()">
         <div class="navbar">
             <a class="navbar--item navbar--active">Home</a>
-            <a class="navbar--item" href="aboutme.html">About Me</a>
+            <a class="navbar--item" href="postcreation.html">Post Creation</a>
             <a class="navbar--item" href="blogPost.html">Blog Post Testing</a>
         </div>
         <div class="main">
             <div class="center">
                 <h1>Eli's Blog</h1>
                 <h2>Welcome</h2>
-                <p class="body--text">This is a blog page I made for an OOP project as the final project for the HTML and CSS unit. It uses Firebase, google's semi-free cloud hosting service, to create and access a database to store the blog page text. It then retrieves it and populates a final programmatically. I will use this to keep track of projects I take an interest in and are working on, kind of like a scientific journal.</p>
-                
+                <p class="body--text">
+                    This is a blog page I made for an OOP project as the final project for the HTML and CSS unit. It uses Firebase, google's semi-free cloud hosting service, to create and access a database to store the blog page text.
+                     It then retrieves it and populates a final programmatically. I will use this to keep track of projects I take an interest in and are working on, kind of like a scientific journal.
+                </p>
+                <ul id="post--container" class="post--container">
+                    <!--Title elements go here  -->
+                </ul>
             </div>
         </div>
     </body>
