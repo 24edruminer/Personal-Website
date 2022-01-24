@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" class="theme--importer" href="css/profile/light.css">
+        <link rel="stylesheet" href="css/profile/profile.css">
+        <link rel="stylesheet" href="css/universal.css">
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+        <script type="text/javascript" src="js/universal.js"></script>
+        <script type="text/javascript" src="js/profile.js"></script>
+        <title>Eli's Blog</title>
+    </head>
+    <body onload="universalSetup();">
+        <div class="navbar">
+            <a class="navbar--item" href="index.html">Home</a>
+            <a class="navbar--item" href="postcreation.html">Post Creation</a>
+            <a class="navbar--item navbar--active">Profile</a>
+        </div>
+        <div class="main">
+            <div class="center">
+                <div class="input--container">
+                    <div style="display: block;">
+                        <center>
+                            <button style="display: block;" class="confirmbutton" style="height: 3000%;" onclick="deleteaccount()">
+                                Delete Account
+                            </button>
+                        </center>
+                        <div style="display:block;">
+                            <input type="text" class="form--input" id="namefield" placeholder="Username"/>
+                        </div>
+                        <div style="display:block;">
+                            <input type="password" class="form--input" id="passfield" placeholder="Password"/>
+                        </div>
+                    </div>
+                    <div style="margin-left: 30px;">
+                        <div style="display: block;">
+                            <button style="visibility: hidden;" class="confirmbutton" onclick="login()">
+                                Log In
+                            </button>
+                            <button style="display: block; height: 40px;" class="confirmbutton greenbutton" onclick="login()">
+                                Log In
+                            </button>
+                            <button style="display: block; height: 40px;" class="confirmbutton yellowbutton" onclick="signup()">
+                                Sign Up
+                            </button>
+                            <button style="display: block; height: 40px;" class="confirmbutton blackbutton" onclick="logout()">
+                                Log Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

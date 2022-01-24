@@ -16,7 +16,13 @@ const firebaseConfig = {
   // Initialize Firebase
   const db = firebase.firestore();
 
+currentUser = null;
+
 function universalSetup() {
-    
+  getStoredUser();    
 }
+
+function getStoredUser(){
+  currentUser = localStorage.getItem("userCredential");
+} 
 

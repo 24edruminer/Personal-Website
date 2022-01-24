@@ -1,0 +1,51 @@
+body {
+    background-color: #fdd8fd;
+}
+
+.main {
+    background-color: #fff;
+}
+
+.confirmbutton {
+    border: 3px solid #a81f4a;
+    background: #fff;
+    color: #a81f4a;
+}
+  
+.confirmbutton:hover{
+    background: #a81f4a;
+    color: #fff;
+}
+
+.greenbutton {
+    border: 3px solid green;
+    background: #fff;
+    color: green;
+}
+  
+.greenbutton:hover{
+    background: green;
+    color: #fff;
+}
+
+.yellowbutton {
+    border: 3px solid #FFD700;
+    background: #fff;
+    color: #FFD700;
+}
+  
+.yellowbutton:hover{
+    background: #FFD700;
+    color: #fff;
+}
+
+.blackbutton {
+    border: 3px solid black;
+    background: #fff;
+    color: black;
+}
+  
+.blackbutton:hover{
+    background: black;
+    color: #fff;
+}

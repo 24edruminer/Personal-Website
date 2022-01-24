@@ -1,0 +1,55 @@
+body {
+    padding-top: 25px;
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3em;
+    margin: 0;
+    padding-top: 32.16px;
+}
+
+h2 {
+    font-family: 'Bebas Neue', cursive;
+    margin: 0;
+}
+
+.body--text {
+    margin: 50px 5%;
+}
+
+.form--input {
+    font-size: 1.2rem;
+    margin: 0 auto;
+    padding: 1.5rem 0rem;
+    margin-bottom: 20px;
+    border-radius: 0.2rem;
+    width:50vw;
+    display: block;
+    border-style: solid;
+  }
+.input--container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.confirmbutton {
+    width: 120px;
+    line-height: 1;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-radius: 40px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+    transform: translateY(-10px);
+    margin: 50px 0;
+}
+
+.confirmbutton:hover{
+    transition: 0.3s ease-in-out;
+}
