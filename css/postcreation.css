@@ -1,0 +1,52 @@
+body {
+    padding-top: 25px;
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3em;
+    margin: 0;
+    padding-top: 32.16px;
+}
+
+h2 {
+    font-family: 'Bebas Neue', cursive;
+    margin: 0;
+}
+
+.body--text {
+    margin: 50px 5%;
+}
+
+.title--input {
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3em;
+}
+
+.body--input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
+}
+
+.input,
+.body--input {
+  border: 2px solid rgb(118, 118, 118);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.body--input {
+    display: block;
+    width: 65vw;
+    overflow: hidden;
+    resize: none;
+    min-height: 40px;
+    line-height: 20px;
+}
+  
+.body--input[contenteditable]:empty::before {
+    content: "Enter body text:";
+    color: rgb(118, 118, 118);
+}

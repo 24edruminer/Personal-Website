@@ -6,13 +6,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>About Me</title>
-        <link rel="stylesheet" class="theme--importer" href="css/postcreation/light.css">
-        <link rel="stylesheet" href="css/postcreation/postcreation.css">
         <link rel="stylesheet" href="css/universal.css">
+        <link rel="stylesheet" href="css/postcreation.css">
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
         <script type="text/javascript" src="js/universal.js"></script>
         <script type="text/javascript" src="js/postcreation.js"></script>
     </head>
-    <body onload="universalSetup()">
+    <body onload="universalSetup(); postcreationLoad();">
         <div class="navbar">
             <a class="navbar--item" href="index.html">Home</a>
             <a class="navbar--item navbar--active">Post Creation</a>
@@ -25,6 +27,17 @@
                 <p class="body--text">
                     
                 </p>
+                <div style="display:block;">
+                    <input type="text" class="form--input title--input" id="titlefield" placeholder="Title"/>
+                </div>
+                <div style="display:block;">
+                    <center>
+                        <p><span class="body--input" role="textbox" id="bodyfield" contenteditable></span></p>
+                    </center>
+                </div>
+                <button id="submit" style="height: 40px;" class="confirmbutton greenbutton" onclick="submitNewPost()">
+                    Submit
+                </button>
             </div>
         </div>
     </body>

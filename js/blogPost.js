@@ -8,6 +8,7 @@
               // doc.data() is never undefined for query doc snapshots
               document.getElementById("title").innerText = doc.data().title;
               document.getElementById("body").innerText = doc.data().body;
+              document.getElementsByTagName("body")[0].classList.remove("hidden");
           });
       })
       .catch((error) => {

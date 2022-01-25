@@ -3,7 +3,6 @@ function signup() {
     firebase.auth().createUserWithEmailAndPassword(document.getElementById("namefield").value, document.getElementById("passfield").value)
     .then((userCredential) => {
       // Signed in 
-  
       firebase.auth().currentUser.sendEmailVerification()
       .then(() => {
         alert("Created and signed in!");
@@ -28,10 +27,8 @@ function login() {
     firebase.auth().signInWithEmailAndPassword(document.getElementById("namefield").value, document.getElementById("passfield").value)
     .then((userCredential) => {
       // Signed in
-      localStorage.setItem("userCredential", userCredential.user);
       alert("Signed in!");
       location.href="index.html";
-      currentUser = userCredential.user;
     })
     .catch((error) => {
       var errorCode = error.code;
@@ -49,8 +46,6 @@ function deleteaccount() {
     const user = firebase.auth().currentUser;
     user.delete().then(() => {
       alert("Deleted!")
-      localStorage.setItem("userCredential", null);
-      currentUser = null;
     }).catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -65,9 +60,22 @@ function deleteaccount() {
 
 function logout() {
   if (currentUser != null) {
-    localStorage.setItem("userCredential", null);
-    currentUser = null;
-    alert("Logged out!");
+    firebase.auth().signOut().then(() => {
+      alert("Logged out!");
+      var navbar = document.getElementsByClassName("navbar")[0];
+      console.log(navbar);
+      console.log(navbar.lastChild);
+      navbar.children[navbar.children.length - 1].innerText = "Profile";
+      if (navbar.children.length == 3){
+        navbar.children[1].remove();
+      }
+    }).catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert(errorMessage);
+      console.log(errorCode + ": " + errorMessage);
+    });
+
   }else{
     alert("Not currently signed in!");
   }

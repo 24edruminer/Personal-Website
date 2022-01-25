@@ -17,3 +17,11 @@ h2 {
 .body--text {
     margin: 50px 5%;
 }
+
+.input--container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}

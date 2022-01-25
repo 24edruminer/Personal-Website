@@ -18,11 +18,35 @@ const firebaseConfig = {
 
 currentUser = null;
 
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    currentUser = user;
+    localStorage.setItem("storedUser", JSON.stringify(user));
+    var uid = user.uid;
+    // ...
+  } else {
+    currentUser = null
+    localStorage.setItem("storedUser", null);
+  }
+});
+
 function universalSetup() {
-  getStoredUser();    
+  getStoredUser();
+  if (currentUser == null){
+    var navbar = document.getElementsByClassName("navbar")[0];
+    navbar.children[2].textContent = "Profile"
+    navbar.children[1].remove();
+  }else{
+    console.log(currentUser);
+    var dispName = currentUser.displayName || currentUser.email.split("@")[0];
+    var navbar = document.getElementsByClassName("navbar")[0];
+    navbar.children[2].textContent = "Profile: " + dispName;
+    if (dispName != "erumi321" && dispName != "24edruminer") {
+      navbar.children[1].remove();
+    }
+  }
 }
 
 function getStoredUser(){
-  currentUser = localStorage.getItem("userCredential");
+  currentUser = JSON.parse(localStorage.getItem('storedUser') || {});
 } 
-

@@ -1,8 +1,11 @@
 function populatePostList() {
     db.collection("blogposts")
+    .orderBy("createdat", "desc")
     .get()
     .then((querySnapshot) => {
+        console.log(querySnapshot)
         querySnapshot.forEach((doc) => {
+            console.log("hey?")
             const li = document.createElement("li");
             li.classList.add("postlink--item");
             const p = document.createElement("p");

@@ -3,6 +3,13 @@
     font-weight: 450;
     overflow-wrap: break-word;
 }
+body {
+    background-color: #fdd8fd;
+}
+
+.main {
+    background-color: #fff;
+}
 
 h1 {
     font-family: 'Bebas Neue', cursive;
@@ -15,7 +22,7 @@ h2 {
 
 .main {
     width: 80%;
-    height: 100vh;
+    min-height: 100vh;
     margin: auto;
 }
 
@@ -47,8 +54,12 @@ h2 {
     text-align: center;
     font-size: 2em;
     margin: 0 10px 0 10px;
+    transition: 0.2s ease-in-out;
 }
-
+.navbar--item:hover {
+    transition: 0.2s ease-in-out;
+    background-color: hsl(341, 69%, 20%);
+}
 .navbar--item--container {
     width: 100px;
     float: center;
@@ -84,4 +95,85 @@ body {
 
 .postlink--item {
     background-color: #c6b7df;
+}
+
+.form--input {
+    font-size: 1.2rem;
+    margin: 0 auto;
+    padding: 1.5rem 0rem;
+    margin-bottom: 20px;
+    border-radius: 0.2rem;
+    width:60vw;
+    display: block;
+    border-style: solid;
+    max-width: 100%;
+    max-height: 50vh;
+    word-break: break-word;
+  }
+
+.confirmbutton {
+    width: 120px;
+    line-height: 1;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-radius: 40px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+    transform: translateY(-10px);
+    margin: 50px 0;
+}
+
+.confirmbutton:hover{
+    transition: 0.3s ease-in-out;
+}
+
+
+.confirmbutton {
+    border: 3px solid #a81f4a;
+    background: #fff;
+    color: #a81f4a;
+}
+  
+.confirmbutton:hover{
+    background: #a81f4a;
+    color: #fff;
+}
+
+.greenbutton {
+    border: 3px solid green;
+    background: #fff;
+    color: green;
+}
+  
+.greenbutton:hover{
+    background: green;
+    color: #fff;
+}
+
+.yellowbutton {
+    border: 3px solid #FFD700;
+    background: #fff;
+    color: #FFD700;
+}
+  
+.yellowbutton:hover{
+    background: #FFD700;
+    color: #fff;
+}
+
+.blackbutton {
+    border: 3px solid black;
+    background: #fff;
+    color: black;
+}
+  
+.blackbutton:hover{
+    background: black;
+    color: #fff;
+}
+
+.hidden {
+    display: none;   
 }

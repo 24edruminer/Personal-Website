@@ -6,19 +6,19 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title id="page--head--title">Eli's Blog - </title>
-        <link rel="stylesheet" class="theme--importer" href="css/blogPost/light.css">
-        <link rel="stylesheet" href="css/blogPost/blogPost.css">
+        <link rel="stylesheet" href="css/blogPost.css">
         <link rel="stylesheet" href="css/universal.css">
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
         <script type="text/javascript" src="js/universal.js"></script>
         <script type="text/javascript" src="js/blogPost.js"></script>
     </head>
-    <body onload="universalSetup(); loadFirebasePage();">
+    <body onload="universalSetup(); loadFirebasePage();" class="hidden">
         <div class="navbar">
             <a class="navbar--item" href="index.html">Home</a>
             <a class="navbar--item" href="postcreation.html">Post Creation</a>
-            <a class="navbar--item navbar--active" href="profilepage.html">Profile</a>
+            <a class="navbar--item" href="profilepage.html">Profile</a>
         </div>
         <div class="main">
             <div class="center">
