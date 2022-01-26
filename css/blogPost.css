@@ -1,0 +1,16 @@
+.body--input[contenteditable]:empty::before {
+    content: "Enter your comment: ";
+    color: rgb(118, 118, 118);
+}
+
+.comment--item {
+    list-style-type: none;
+    border: 3px solid black;
+    width: 60vw;
+    margin-bottom: 1vh;
+}
+
+.comment--title {
+    display: block;
+    text-align: none;
+}
