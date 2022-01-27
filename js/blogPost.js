@@ -104,7 +104,7 @@ function submitComment() {
     var dispName = currentUser.displayName || currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
-    db.collection("comments").set({
+    db.collection("comments").doc(title + "," + docID).set({
         body: body,
         createdby: dispName,
         createdat: docID,
