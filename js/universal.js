@@ -22,8 +22,6 @@ firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUser = user;
     localStorage.setItem("storedUser", JSON.stringify(user));
-    var uid = user.uid;
-    // ...
   } else {
     currentUser = null
     localStorage.setItem("storedUser", null);
@@ -50,3 +48,10 @@ function universalSetup() {
 function getStoredUser(){
   currentUser = JSON.parse(localStorage.getItem('storedUser') || {});
 } 
+
+function logFirebaseError(error){
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  alert(errorMessage);
+  console.log(errorCode + ": " + errorMessage);
+}

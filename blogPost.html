@@ -6,8 +6,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title id="page--head--title">Eli's Blog - </title>
-        <link rel="stylesheet" href="css/blogPost.css">
         <link rel="stylesheet" href="css/universal.css">
+        <link rel="stylesheet" href="css/blogPost.css">
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
@@ -46,16 +46,16 @@
             <center>
                 <ul id="comments--container" class="comments--container">
                 </ul>
-            </center>
-            <center>
-                <div style="display:block;">
-                    <center>
-                        <p><span class="body--input" role="textbox" id="bodyfield" contenteditable></span></p>
-                    </center>
+                <div id="submit--container">
+                    <div style="display:block;">
+                        <center>
+                            <p><span class="body--input" role="textbox" id="bodyfield" contenteditable></span></p>
+                        </center>
+                    </div>
+                    <button id="submit" style="height: 40px; margin: 10px;" class="confirmbutton greenbutton" onclick="submitComment()">
+                        Submit
+                    </button>
                 </div>
-                <button id="submit" style="height: 40px; margin: 10px;" class="confirmbutton greenbutton" onclick="submitComment()">
-                    Submit
-                </button>
             </center>
 
         </div>

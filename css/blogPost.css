@@ -12,5 +12,49 @@
 
 .comment--title {
     display: block;
-    text-align: none;
+    text-align: left;
+    align-self: left;
+    /* float: left; */
+    margin: 5px 0 0 0;
+}
+
+.comment--text {
+    margin: 0 0 0 0;
+}
+
+.reply--item {
+    list-style-type: none;
+    border: 3px solid grey;
+    width: 55vw;
+    margin-bottom: 1vh;
+    margin-left: 5vw;
+}
+
+.comment--topbar {
+    display: block;
+    text-align: left;
+}
+
+.comment--replybtn {
+    display: inline;
+    float: right;
+    cursor: pointer;
+}
+
+.reply--input {
+    width: 55vw;
+}
+
+.reply--input[contenteditable]:empty::before {
+    content: "Enter your reply: ";
+    color: rgb(118, 118, 118);
+}
+
+.reply--container {
+    width: 55vw;
+}
+
+.reply--submit {
+    width: 80px;
+    font-size: 14px;
 }

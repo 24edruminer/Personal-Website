@@ -35,7 +35,6 @@ function submitNewPost() {
     console.log("Document successfully written!");
   })
   .catch((error) => {
-    alert("Error writing document: ", error);
-    console.error("Error writing document: ", error);
+    logFirebaseError(error)
   });
 }

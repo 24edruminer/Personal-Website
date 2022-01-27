@@ -12,10 +12,7 @@ function signup() {
     });
     })
     .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorMessage);
-      console.log(errorCode + ": " + errorMessage);
+      logFirebaseError(error);
     });
   }else{
     alert("Already signed in!");
@@ -31,10 +28,7 @@ function login() {
       location.href="index.html";
     })
     .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorMessage);
-      console.log(errorCode + ": " + errorMessage);
+      logFirebaseError(error)
     });
   }else{
     alert("Already signed in!");
@@ -47,10 +41,7 @@ function deleteaccount() {
     user.delete().then(() => {
       alert("Deleted!")
     }).catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorMessage);
-      console.log(errorCode + ": " + errorMessage);
+      logFirebaseError(error)
     });
   } else {
     // Do nothing!
@@ -70,10 +61,7 @@ function logout() {
         navbar.children[1].remove();
       }
     }).catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      alert(errorMessage);
-      console.log(errorCode + ": " + errorMessage);
+      logFirebaseError(error)
     });
 
   }else{

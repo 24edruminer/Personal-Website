@@ -20,7 +20,7 @@ function populatePostList() {
         });
     })
     .catch((error) => {
-        console.log("Error getting documents: ", error);
+        logFirebaseError(error)
     });
 }
 
