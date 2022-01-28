@@ -39,7 +39,8 @@ function deleteaccount() {
   if (confirm('Are you sure you want to delete your account?')) {
     const user = firebase.auth().currentUser;
     user.delete().then(() => {
-      alert("Deleted!")
+      alert("Deleted!");
+      logout();
     }).catch((error) => {
       logFirebaseError(error)
     });

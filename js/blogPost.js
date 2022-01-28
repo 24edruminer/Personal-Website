@@ -18,10 +18,14 @@ function loadFirebasePage(){
 }
 
 function loadComments(title) {
+    var curName = null;
     if (currentUser == null) {
         document.getElementById("submit--container").remove();
+    }else{
+        curName = currentUser.displayName || currentUser.email.split("@")[0];
     }
-    db.collection("comments").where("linkedto", "==", title)
+    
+    db.collection("comments").orderBy("createdat", "desc")
     .get()
     .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
@@ -37,32 +41,63 @@ function loadComments(title) {
             const createdby = document.createElement("p");
             createdby.classList.add("comment--title");
             createdby.innerText = doc.data().createdby;
-            topBar.appendChild(createdby);
             createdby.setAttribute("style", "display: inline;");
+            topBar.appendChild(createdby);
 
             const p = document.createElement("p");
             p.classList.add("comment--text");
             p.innerText = doc.data().body;
 
-            const btn = document.createElement("btn");
-            btn.classList.add("comment--replybtn")
+            console.log(doc.data().createdby);
+            if (doc.data().createdby == curName){
+                const deleteButton = document.createElement("btn");
+                deleteButton.classList.add("comment--replybtn")
+                deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
+    
+                const deleteImg = document.createElement("img");
+                deleteImg.setAttribute("src", "Images/BlackDelete.png");
+                deleteImg.setAttribute("width", "20vh");
+                deleteImg.setAttribute("height", "20vh");
+                
+                deleteButton.appendChild(deleteImg);
+                topBar.appendChild(deleteButton);
 
-            const img = document.createElement("img");
-            img.setAttribute("src", "Images/ReplyIcon.png");
-            img.setAttribute("width", "20vh");
-            img.setAttribute("height", "20vh");
+                const editButton = document.createElement("btn");
+                editButton.classList.add("comment--replybtn")
+                editButton.setAttribute("onclick", "editComment('" + doc.id + "', this);");
+    
+                const editImg = document.createElement("img");
+                editImg.setAttribute("src", "Images/EditIcon.png");
+                editImg.setAttribute("width", "20vh");
+                editImg.setAttribute("height", "20vh");
+                
+                editButton.appendChild(editImg);
+                topBar.appendChild(editButton);
+            }
 
-            btn.appendChild(img);
-            topBar.appendChild(btn);
+            if (currentUser != null){
+                const btn = document.createElement("btn");
+                btn.classList.add("comment--replybtn");
+                btn.setAttribute("onclick", "setReplyField('" + doc.id + "', this);");
+    
+                const img = document.createElement("img");
+                img.setAttribute("src", "Images/ReplyIcon.png");
+                img.setAttribute("width", "20vh");
+                img.setAttribute("height", "20vh");
+    
+                btn.appendChild(img);
+                topBar.appendChild(btn);
+            }
 
             const li = document.createElement("li");
             li.classList.add("comment--item");
+            li.setAttribute("docId", doc.id);
+            li.setAttribute("isComment", true);
             li.appendChild(topBar);
             li.appendChild(p);
             console.log(li);
-            btn.setAttribute("onclick", "setReplyField('" + doc.id + "', this);");
-
-            db.collection("replies").where("replyto", "==", doc.id)
+            
+            db.collection("replies").orderBy("createdat", "desc").where("replyto", "==", doc.id)
             .get()
             .then((replySnapshot) => {
                 const element = document.getElementById("comments--container");
@@ -70,7 +105,40 @@ function loadComments(title) {
                 replySnapshot.forEach((reply) => {
                     const replyContainer = document.createElement("li");
                     replyContainer.classList.add("reply--item");
-                    console.log(reply);
+                    replyContainer.setAttribute("docId", reply.id);
+                    replyContainer.setAttribute("isComment", false);
+        
+                    if (reply.data().createdby == curName){
+                        const topBar = document.createElement("div");
+                        topBar.classList.add("comment--topbar");
+
+                        const deleteButton = document.createElement("btn");
+                        deleteButton.classList.add("comment--replybtn")
+                        deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
+
+                        const deleteImg = document.createElement("img");
+                        deleteImg.setAttribute("src", "Images/BlackDelete.png");
+                        deleteImg.setAttribute("width", "20vh");
+                        deleteImg.setAttribute("height", "20vh");
+
+                        deleteButton.appendChild(deleteImg);
+                        topBar.appendChild(deleteButton);
+
+                        const editButton = document.createElement("btn");
+                        editButton.classList.add("comment--replybtn")
+                        editButton.setAttribute("onclick", "editComment('" + doc.id + "', this);");
+            
+                        const editImg = document.createElement("img");
+                        editImg.setAttribute("src", "Images/EditIcon.png");
+                        editImg.setAttribute("width", "20vh");
+                        editImg.setAttribute("height", "20vh");
+                        
+                        editButton.appendChild(editImg);
+                        topBar.appendChild(editButton);
+
+                        replyContainer.appendChild(topBar);
+                    }
+
                     const createdby = document.createElement("p");
                     createdby.classList.add("comment--title");
                     createdby.innerText = reply.data().createdby;
@@ -81,7 +149,7 @@ function loadComments(title) {
         
                     replyContainer.appendChild(createdby);
                     replyContainer.appendChild(p);
-                        element.appendChild(replyContainer);
+                    element.appendChild(replyContainer);
                 });
 
             }).catch((error) => {
@@ -104,7 +172,7 @@ function submitComment() {
     var dispName = currentUser.displayName || currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
-    db.collection("comments").doc(title + "," + docID).set({
+    db.collection("comments").add({
         body: body,
         createdby: dispName,
         createdat: docID,
@@ -163,6 +231,7 @@ function setReplyField(docId, buttonElement) {
     newContainer.setAttribute("id", "reply--container");
     newContainer.classList.add("reply--container");
 
+    newContainer.querySelector("#bodyfield").innerText = "";
     newContainer.querySelector("#bodyfield").classList.add("reply--input");
     newContainer.querySelector("#bodyfield").setAttribute("id", "replyfield");
 
@@ -187,4 +256,93 @@ function closeReplyField() {
     if (oldReplyContainer != null){
         oldReplyContainer.remove();
     }
+}
+
+function deleteComment(docID, buttonElement){
+    var parentElement = buttonElement.parentNode.parentNode;
+    var commentContainerChildren = parentElement.parentNode.children;
+
+    var start = Array.prototype.indexOf.call(commentContainerChildren, parentElement)
+    var i = start + 1;
+
+    while(commentContainerChildren.length > i && commentContainerChildren[i].classList.contains("reply--item")){
+        i++;
+    }
+
+    var childrenSlice = Array.prototype.slice.call(commentContainerChildren, start + 1, i);
+
+    //remove all replies below comment
+    if (parentElement.getAttribute("iscomment") == "true"){
+        childrenSlice.forEach((child) => {
+            removeCommentItem(child, true);
+            child.remove();
+        })
+    }
+    parentElement.remove();
+    removeCommentItem(parentElement, false);    
+}
+
+function removeCommentItem(element, ignoreMessage) {
+    if (element.getAttribute("iscomment") == "true") {
+        db.collection("comments").doc(element.getAttribute("docID")).delete().then(() => {
+            console.log("Document successfully deleted!");
+            if (ignoreMessage == false){
+                alert("Deleted your comment!");
+            }
+        }).catch((error) => {
+            logFirebaseError(error);
+        });
+    }else{
+        db.collection("replies").doc(element.getAttribute("docID")).delete().then(() => {
+            console.log("Document successfully deleted!");
+            if (ignoreMessage == false){
+                alert("Deleted your reply!");
+            }
+        }).catch((error) => {
+            logFirebaseError(error);
+        });
+    }
+}
+
+function editComment(docId, buttonElement){
+    closeEditField();
+    
+    var parentElement = buttonElement.parentNode.parentNode;
+    var submitContainer = document.getElementById("submit--container");
+    var commentContainerChildren = parentElement.parentNode.children;
+    var parentIndex = Array.prototype.indexOf.call(commentContainerChildren, parentElement);
+    
+    var newContainer = submitContainer.cloneNode(true);
+    newContainer.setAttribute("id", "edit--container");
+    newContainer.classList.add("edit--container");
+
+    newContainer.querySelector("#bodyfield").innerText = "";
+    newContainer.querySelector("#bodyfield").classList.add("edit--input");
+    newContainer.querySelector("#bodyfield").setAttribute("id", "replyfield");
+
+    var submitButton = newContainer.querySelector("#submit");
+    submitButton.classList.add("reply--submit");
+    submitButton.setAttribute("onclick", "submitEdit('" + docId + "');")
+
+    var cancelButton = submitButton.cloneNode(true);
+    cancelButton.classList.remove("greenbutton");
+    cancelButton.classList.remove("redbutton");
+    cancelButton.innerText = "Cancel";
+    cancelButton.setAttribute("onclick", "closeEditField()");
+
+    submitButton.parentNode.appendChild(cancelButton);
+
+    parentElement.insertBefore(newContainer, commentContainerChildren[parentIndex + 1]);
+    console.log(parentElement);
+}
+
+function closeEditField() {
+    var oldEditContainer = document.getElementById("edit--container");
+    if (oldEditContainer != null){
+        oldEditContainer.remove();
+    }
+}
+
+function submitEdit(docID){
+    
 }

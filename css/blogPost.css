@@ -20,6 +20,7 @@
 
 .comment--text {
     margin: 0 0 0 0;
+    text-align: left;
 }
 
 .reply--item {
@@ -39,10 +40,12 @@
     display: inline;
     float: right;
     cursor: pointer;
+    margin-right: 1vw;
 }
 
 .reply--input {
     width: 55vw;
+    text-align: left;
 }
 
 .reply--input[contenteditable]:empty::before {
@@ -57,4 +60,18 @@
 .reply--submit {
     width: 80px;
     font-size: 14px;
+}
+
+.body--input {
+    text-align: left;
+}
+
+.edit--input {
+    width: 55vw;
+    text-align: left;
+}
+
+.edit--input[contenteditable]:empty::before {
+    content: "Enter new text: ";
+    color: rgb(118, 118, 118);
 }

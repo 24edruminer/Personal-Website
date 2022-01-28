@@ -46,7 +46,12 @@ function universalSetup() {
 }
 
 function getStoredUser(){
-  currentUser = JSON.parse(localStorage.getItem('storedUser') || {});
+  var stored = localStorage.getItem('storedUser');
+  if (stored != null) {
+    currentUser = JSON.parse(localStorage.getItem('storedUser'));
+  }else{
+    currentUser = null;
+  }
 } 
 
 function logFirebaseError(error){
