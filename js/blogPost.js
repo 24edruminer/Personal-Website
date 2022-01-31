@@ -1,13 +1,13 @@
 function loadFirebasePage(){
     var title = sessionStorage.getItem("currentPage");
-    console.log(title);
     db.collection("blogposts").where("title", "==", title)
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             document.getElementById("title").innerText = doc.data().title;
-            document.getElementById("body").innerText = doc.data().body;
+            // document.getElementById("body").innerText = doc.data().body;
+            formatBody(doc.data().body);
             document.getElementById("page--head--title").innerText = "Eli's Blog - " + doc.data().title;
             loadComments(title);
         });
@@ -15,6 +15,25 @@ function loadFirebasePage(){
     .catch((error) => {
         logFirebaseError(error)
     });
+}
+
+function formatBody(text) {
+    var bodyContainer = document.getElementById("body--container")
+    var splitString = text.split("/~/");
+    console.log(splitString);
+    for(var i = 0; i < splitString.length; i++){
+        var comArg = splitString[i].split("/~~/");
+        console.log(comArg);
+        if (comArg.length == 1){
+            const pElement = document.createElement("p");
+            pElement.innerText = comArg[0];
+            bodyContainer.appendChild(pElement);
+        }else{
+            const newElement = document.createElement("htmlElement");
+            bodyContainer.appendChild(newElement);
+            newElement.outerHTML = comArg[1];
+        }
+    }
 }
 
 function loadComments(title) {
@@ -25,7 +44,7 @@ function loadComments(title) {
         curName = currentUser.displayName || currentUser.email.split("@")[0];
     }
     
-    db.collection("comments").orderBy("createdat", "desc")
+    db.collection("comments").orderBy("createdat", "desc").where("linkedto", "==", title)
     .get()
     .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
@@ -48,7 +67,6 @@ function loadComments(title) {
             p.classList.add("comment--text");
             p.innerText = doc.data().body;
 
-            console.log(doc.data().createdby);
             if (doc.data().createdby == curName){
                 const deleteButton = document.createElement("btn");
                 deleteButton.classList.add("comment--replybtn")
@@ -95,7 +113,6 @@ function loadComments(title) {
             li.setAttribute("isComment", true);
             li.appendChild(topBar);
             li.appendChild(p);
-            console.log(li);
             
             db.collection("replies").orderBy("createdat", "desc").where("replyto", "==", doc.id)
             .get()
@@ -168,7 +185,6 @@ function submitComment() {
     var docID = Date.now();
     var title = sessionStorage.getItem("currentPage");
     var body = document.getElementById("bodyfield").innerText;
-    console.log(body);
     var dispName = currentUser.displayName || currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
@@ -196,7 +212,6 @@ function submitReply(docId) {
     var newDocId = Date.now();
     var title = sessionStorage.getItem("currentPage");
     var body = document.getElementById("replyfield").innerText;
-    console.log(body);
     var dispName = currentUser.displayName || currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
@@ -248,7 +263,6 @@ function setReplyField(docId, buttonElement) {
     submitButton.parentNode.appendChild(cancelButton);
 
     parentElement.parentNode.insertBefore(newContainer, commentContainerChildren[parentIndex + 1]);
-    console.log(parentElement);
 }
 
 function closeReplyField() {
@@ -333,7 +347,6 @@ function editComment(docId, buttonElement){
     submitButton.parentNode.appendChild(cancelButton);
 
     parentElement.insertBefore(newContainer, commentContainerChildren[parentIndex + 1]);
-    console.log(parentElement);
 }
 
 function closeEditField() {

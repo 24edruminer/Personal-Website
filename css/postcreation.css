@@ -24,6 +24,10 @@ h2 {
     font-size: 3em;
 }
 
+.body--input {
+    text-align: left;
+}
+
 .body--input[contenteditable]:empty::before {
     content: "Enter body text:";
     color: rgb(118, 118, 118);
