@@ -87,7 +87,7 @@ function loadComments(postID) {
             p.classList.add("comment--text");
             p.innerText = doc.data().body;
 
-            if (doc.data().createdby == curName){
+            if (doc.data().createdby == curName || curName == "erumi321" || curName == "24edruminer"){
                 const deleteButton = document.createElement("btn");
                 deleteButton.classList.add("comment--replybtn")
                 deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
