@@ -19,17 +19,19 @@ function submitNewPost() {
   console.log(body);
   var dispName = currentUser.displayName || currentUser.email.split("@")[0];
   // Add a new document in collection "cities"
-  db.collection("blogposts").doc(title).set({
+  db.collection("blogposts").add({
     title: title,
     body: body,
     createdby: dispName,
     createdat: docID
   })
-  .then(() => {
+  .then((doc) => {
+    console.log(doc);
     alert("Document successfully written!");
     if (confirm("See the new post now?")){
       sessionStorage.setItem("currentPage", title);
-      console.log(sessionStorage.getItem("currentPage"))
+      sessionStorage.setItem("currentID", doc.id);
+      
       location.href = "blogPost.html";
     }
     console.log("Document successfully written!");

@@ -9,7 +9,7 @@ function loadFirebasePage(){
             // document.getElementById("body").innerText = doc.data().body;
             formatBody(doc.data().body);
             document.getElementById("page--head--title").innerText = "Eli's Blog - " + doc.data().title;
-            loadComments(title);
+            loadComments(doc.id);
         });
     })
     .catch((error) => {
@@ -36,7 +36,7 @@ function formatBody(text) {
     }
 }
 
-function loadComments(title) {
+function loadComments(postID) {
     var curName = null;
     if (currentUser == null) {
         document.getElementById("submit--container").remove();
@@ -44,7 +44,7 @@ function loadComments(title) {
         curName = currentUser.displayName || currentUser.email.split("@")[0];
     }
     
-    db.collection("comments").orderBy("createdat", "desc").where("linkedto", "==", title)
+    db.collection("comments").orderBy("createdat", "desc").where("linkedto", "==", postID)
     .get()
     .then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
@@ -183,8 +183,9 @@ function loadComments(title) {
 
 function submitComment() {
     var docID = Date.now();
-    var title = sessionStorage.getItem("currentPage");
+    var linkedTo = sessionStorage.getItem("currentID");
     var body = document.getElementById("bodyfield").innerText;
+    document.getElementById("bodyfield").innerText = "";
     var dispName = currentUser.displayName || currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
@@ -192,11 +193,11 @@ function submitComment() {
         body: body,
         createdby: dispName,
         createdat: docID,
-        linkedto: title
+        linkedto: linkedTo
       })
       .then(() => {
         alert("Comment Posted!");
-        loadComments(title);
+        loadComments(linkedTo);
         console.log("Document successfully written!");
       })
       .catch((error) => {
@@ -223,7 +224,7 @@ function submitReply(docId) {
       })
       .then(() => {
         alert("Reply Posted!");
-        loadComments(title);
+        loadComments(sessionStorage.getItem("currentID"));
         console.log("Document successfully written!");
       })
       .catch((error) => {

@@ -16,7 +16,7 @@ function populatePostList() {
             const element = document.getElementById("post--container");
             element.appendChild(li);
 
-            li.setAttribute("onclick", "openPostPage('" + doc.data().title + "');");
+            li.setAttribute("onclick", "openPostPage('" + doc.data().title + "', '" + doc.id + "');");
         });
     })
     .catch((error) => {
@@ -24,8 +24,9 @@ function populatePostList() {
     });
 }
 
-function openPostPage(title){
+function openPostPage(title, id){
     sessionStorage.setItem("currentPage", title);
-    console.log(sessionStorage.getItem("currentPage"))
+    sessionStorage.setItem("currentID", id);
+    
     location.href = "blogPost.html";
 }
