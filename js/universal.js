@@ -1,3 +1,5 @@
+var provider = new firebase.auth.GoogleAuthProvider();
+
 // Import the functions you need from the SDKs you need
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -18,22 +20,21 @@ const firebaseConfig = {
 
 currentUser = null;
 
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user;
-    localStorage.setItem("storedUser", JSON.stringify(user));
-  } else {
-    currentUser = null
-    localStorage.setItem("storedUser", null);
-  }
-});
-
 function universalSetup() {
   getStoredUser();
   if (currentUser == null){
     var navbar = document.getElementsByClassName("navbar")[0];
     navbar.children[2].textContent = "Profile"
     navbar.children[1].remove();
+    firebase.auth()
+    .getRedirectResult()
+    .then((result) => {
+    var user = result.user;
+      currentUser = user;
+      localStorage.setItem("storedUser", JSON.stringify(user));    
+    }).catch((error) => {
+      logFirebaseError(error);
+    });
   }else{
     console.log(currentUser);
     var dispName = currentUser.displayName || currentUser.email.split("@")[0];

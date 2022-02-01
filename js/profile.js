@@ -19,17 +19,26 @@ function signup() {
   }
 }
 
+function checkSignIn() {
+  if (currentUser == null) {
+    firebase.auth()
+    .getRedirectResult()
+    .then((result) => {
+      alert("Signed in");
+      location.href = "index.html";
+    }).catch((error) => {
+      logFirebaseError(error);
+    });
+  }
+}
+
 function login() {
   if (currentUser == null){
-    firebase.auth().signInWithEmailAndPassword(document.getElementById("namefield").value, document.getElementById("passfield").value)
-    .then((userCredential) => {
-      // Signed in
-      alert("Signed in!");
+    firebase.auth().signInWithRedirect(provider).then(() => {
+      alert("Signed in");
       location.href="index.html";
-    })
-    .catch((error) => {
-      logFirebaseError(error)
     });
+
   }else{
     alert("Already signed in!");
   }
@@ -61,6 +70,8 @@ function logout() {
       if (navbar.children.length == 3){
         navbar.children[1].remove();
       }
+      currentUser = null;
+      localStorage.setItem("storedUser", null);
     }).catch((error) => {
       logFirebaseError(error)
     });
@@ -69,3 +80,13 @@ function logout() {
     alert("Not currently signed in!");
   }
 }
+
+// Initialize the FirebaseUI Widget using Firebase.
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+ui.start('#firebaseui-auth-container', {
+  signInOptions: [
+    // List of OAuth providers supported.
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+  ],
+  // Other config options...
+});
