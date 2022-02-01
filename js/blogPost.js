@@ -3,9 +3,29 @@ function loadFirebasePage(){
     db.collection("blogposts").where("title", "==", title)
     .get()
     .then((querySnapshot) => {
+        if(querySnapshot.docs.length == 0) {
+            alert("No loaded document, going back to the homepage!");
+            location.href = "index.html";
+        }
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             document.getElementById("title").innerText = doc.data().title;
+            var curName = currentUser.displayName || currentUser.email.split("@")[0];
+            if (doc.data().createdby == curName || curName == "erumi321" || curName == "24edruminer"){
+                const titleBar = document.getElementById("title--bar");
+                
+                const deleteButton = document.createElement("btn");
+                deleteButton.classList.add("comment--replybtn")
+                deleteButton.setAttribute("onclick", "deletePost('" + doc.id + "');");
+    
+                const deleteImg = document.createElement("img");
+                deleteImg.setAttribute("src", "Images/BlackDelete.png");
+                deleteImg.setAttribute("width", "20vh");
+                deleteImg.setAttribute("height", "20vh");
+                
+                deleteButton.appendChild(deleteImg);
+                titleBar.appendChild(deleteButton);
+            }
             // document.getElementById("body").innerText = doc.data().body;
             formatBody(doc.data().body);
             document.getElementById("page--head--title").innerText = "Eli's Blog - " + doc.data().title;
@@ -273,6 +293,31 @@ function closeReplyField() {
     }
 }
 
+function deletePost(docID){
+    console.log("hey");
+    var batch = db.batch();
+    db.collection("blogposts").doc(docID).delete().then(() => {
+        db.collection("comments").where("linkedto", "==", docID)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((comment) => {
+                db.collection("comments").doc(comment.id).delete();
+                db.collection("replies").where("replyto", "==", comment.id)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((reply) => {
+                        db.collection("replies").doc(reply.id).delete();
+                    })
+                })
+            })
+        })
+    alert("Dey-ley-tey");
+    location.href = "index.html";
+    }).catch((error) => {
+        logFirebaseError(error);
+    });
+}
+
 function deleteComment(docID, buttonElement){
     var parentElement = buttonElement.parentNode.parentNode;
     var commentContainerChildren = parentElement.parentNode.children;
@@ -296,6 +341,7 @@ function deleteComment(docID, buttonElement){
     parentElement.remove();
     removeCommentItem(parentElement, false);    
 }
+
 
 function removeCommentItem(element, ignoreMessage) {
     if (element.getAttribute("iscomment") == "true") {
@@ -333,7 +379,7 @@ function editComment(docId, buttonElement){
 
     newContainer.querySelector("#bodyfield").innerText = "";
     newContainer.querySelector("#bodyfield").classList.add("edit--input");
-    newContainer.querySelector("#bodyfield").setAttribute("id", "replyfield");
+    newContainer.querySelector("#bodyfield").setAttribute("id", "editfield");
 
     var submitButton = newContainer.querySelector("#submit");
     submitButton.classList.add("reply--submit");
@@ -358,5 +404,14 @@ function closeEditField() {
 }
 
 function submitEdit(docID){
-    
+    var editText =  document.getElementById("editfield").innerText
+    db.collection("comments").doc(docID).set({
+        body: editText
+    }, { merge: true }).then(() => {
+        alert("Comment edited succesfully!");
+        loadComments(sessionStorage.getItem("currentID"));
+    } )
+    .catch((error) => {
+        logFirebaseError(error);
+    });
 }
