@@ -1,3 +1,12 @@
+function profileSetup() {
+  var dispname = curName;
+  if (curName.length > 25){
+    dispname = dispname.substring(0, 25);
+  }
+  document.getElementById("namefield").innerText = dispname;
+  document.getElementById("curLengthID").innerText = dispname.length;
+}
+
 function signup() {
   if (currentUser == null){
     firebase.auth().createUserWithEmailAndPassword(document.getElementById("namefield").value, document.getElementById("passfield").value)
@@ -22,7 +31,6 @@ function signup() {
 function deleteaccount() {
   if (confirm('Are you sure you want to delete your account?')) {
     const user = firebase.auth().currentUser;
-      var curName = currentUser.email.split("@")[0];
       deleteComments(curName);
       user.delete().then(() => {
         alert("Deleted!");
@@ -82,6 +90,20 @@ function logout() {
   }
 }
 
+function submitDisplayName() {
+  const user = firebase.auth().currentUser;
+  console.log(document.getElementById("namefield").innerText);
+  user.updateProfile({
+    displayName: document.getElementById("namefield").innerText
+  }).then(() => {
+    console.log(user);
+    localStorage.setItem("storedUser", JSON.stringify(user));
+    location.reload();
+    alert("Updated account succesfully!")
+  }).catch((error) => {
+    logFirebaseError(error);
+  });  
+}
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 var uiConfig = {

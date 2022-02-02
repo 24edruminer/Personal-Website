@@ -16,7 +16,7 @@
         <script type="text/javascript" src="js/profile.js"></script>
         <title>Eli's Blog</title>
     </head>
-    <body onload="universalSetup();">
+    <body onload="universalSetup(); profileSetup();">
         <div class="navbar">
             <a class="navbar--item" href="index.html">Home</a>
             <a class="navbar--item" href="postcreation.html">Post Creation</a>
@@ -49,6 +49,24 @@
                                     Log Out
                                 </button>
                             </center>
+                        </div>
+                        <div class="profile--management">
+                            <center>
+                                <p id="signedinas">Signed in as: </p>
+                                <div id="displayname">
+                                    <div style="display: inline-block; vertical-align: top;">
+                                        <p style="display: inline-block;">Display Name: </p>
+                                    </div>
+                                    <span style="display: inline-block;" class="body--input" role="textbox" id="namefield" max="25" curLengthID="curLengthID" contenteditable></span>
+                                    <div style="display: inline-block">
+                                        <p id="curLengthID" style="display: inline-block"></p>
+                                        <p style="display: inline-block">/25</p>
+                                    </div>
+                                    <button style="display: inline-block; margin: 16px 0; vertical-align: top;" class="confirmbutton greenbutton" onclick="submitDisplayName()">
+                                        Save Name
+                                    </button>
+                                </div>
+                            </center>                            
                         </div>
                     </div>
                 </div>

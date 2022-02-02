@@ -10,8 +10,7 @@ function loadFirebasePage(){
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             document.getElementById("title").innerText = doc.data().title;
-            var curName = (currentUser || {email: ""}).email.split("@")[0];
-            if (doc.data().createdby == curName || curName == "erumi321" || curName == "24edruminer"){
+            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2"){
                 const titleBar = document.getElementById("title--bar");
                 
                 const deleteButton = document.createElement("btn");
@@ -80,11 +79,8 @@ function formatBody(text) {
 }
 
 function loadComments(postID) {
-    var curName = null;
     if (currentUser == null) {
         document.getElementById("submit--container").remove();
-    }else{
-        curName = currentUser.email.split("@")[0];
     }
     
     db.collection("comments").orderBy("createdat", "desc").where("linkedto", "==", postID)
@@ -110,7 +106,7 @@ function loadComments(postID) {
             p.classList.add("comment--text");
             p.innerText = doc.data().body;
 
-            if (doc.data().createdby == curName || curName == "erumi321" || curName == "24edruminer"){
+            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2"){
                 const deleteButton = document.createElement("btn");
                 deleteButton.classList.add("comment--replybtn")
                 deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
@@ -125,7 +121,7 @@ function loadComments(postID) {
 
                 const editButton = document.createElement("btn");
                 editButton.classList.add("comment--replybtn")
-                editButton.setAttribute("onclick", "editComment('" + doc.id + "', this);");
+                editButton.setAttribute("onclick", "editComment('" + doc.id + "', this, String.raw`" + doc.data().body + "`);");
     
                 const editImg = document.createElement("img");
                 editImg.setAttribute("src", "Images/EditIcon.png");
@@ -168,13 +164,13 @@ function loadComments(postID) {
                     replyContainer.setAttribute("docId", reply.id);
                     replyContainer.setAttribute("isComment", false);
         
-                    if (reply.data().createdby == curName){
+                    if (reply.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2"){
                         const topBar = document.createElement("div");
                         topBar.classList.add("comment--topbar");
 
                         const deleteButton = document.createElement("btn");
                         deleteButton.classList.add("comment--replybtn")
-                        deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
+                        deleteButton.setAttribute("onclick", "deleteComment('" + reply.id + "', this);");
 
                         const deleteImg = document.createElement("img");
                         deleteImg.setAttribute("src", "Images/BlackDelete.png");
@@ -186,7 +182,7 @@ function loadComments(postID) {
 
                         const editButton = document.createElement("btn");
                         editButton.classList.add("comment--replybtn")
-                        editButton.setAttribute("onclick", "editComment('" + doc.id + "', this);");
+                        editButton.setAttribute("onclick", "editReply('" + reply.id + "', this, String.raw`" + reply.data().body + "`);");
             
                         const editImg = document.createElement("img");
                         editImg.setAttribute("src", "Images/EditIcon.png");
@@ -286,18 +282,20 @@ function submitComment() {
     var linkedTo = sessionStorage.getItem("currentID");
     var body = document.getElementById("bodyfield").innerText;
     document.getElementById("bodyfield").innerText = "";
-    var dispName = currentUser.email.split("@")[0];
+    var dispName = curName;
+    console.log(currentUser);
     if (body != null && body != "") {
     // Add a new document in collection "cities"
     db.collection("comments").add({
         body: body,
         createdby: dispName,
         createdat: docID,
-        linkedto: linkedTo
+        linkedto: linkedTo,
+        createdUID: currentUser.uid
       })
       .then(() => {
         alert("Comment Posted!");
-        loadComments(linkedTo);
+        location.reload();
         console.log("Document successfully written!");
       })
       .catch((error) => {
@@ -313,18 +311,19 @@ function submitReply(docId) {
     var newDocId = Date.now();
     var title = sessionStorage.getItem("currentPage");
     var body = document.getElementById("replyfield").innerText;
-    var dispName = currentUser.email.split("@")[0];
+    var dispName = curName;
     if (body != null && body != "") {
     // Add a new document in collection "cities"
     db.collection("replies").add({
         body: body,
         createdby: dispName,
         createdat: newDocId,
-        replyto: docId
+        replyto: docId,
+        createdUID: currentUser.uid
       })
       .then(() => {
         alert("Reply Posted!");
-        loadComments(sessionStorage.getItem("currentID"));
+        location.reload();
         console.log("Document successfully written!");
       })
       .catch((error) => {
@@ -420,7 +419,6 @@ function deleteComment(docID, buttonElement){
     removeCommentItem(parentElement, false);    
 }
 
-
 function removeCommentItem(element, ignoreMessage) {
     if (element.getAttribute("iscomment") == "true") {
         db.collection("comments").doc(element.getAttribute("docID")).delete().then(() => {
@@ -428,6 +426,7 @@ function removeCommentItem(element, ignoreMessage) {
             if (ignoreMessage == false){
                 alert("Deleted your comment!");
             }
+            location.reload();
         }).catch((error) => {
             logFirebaseError(error);
         });
@@ -437,13 +436,14 @@ function removeCommentItem(element, ignoreMessage) {
             if (ignoreMessage == false){
                 alert("Deleted your reply!");
             }
+            location.reload();
         }).catch((error) => {
             logFirebaseError(error);
         });
     }
 }
 
-function editComment(docId, buttonElement){
+function editComment(docId, buttonElement, initialValue){
     closeEditField();
     
     var parentElement = buttonElement.parentNode.parentNode;
@@ -455,7 +455,7 @@ function editComment(docId, buttonElement){
     newContainer.setAttribute("id", "edit--container");
     newContainer.classList.add("edit--container");
 
-    newContainer.querySelector("#bodyfield").innerText = "";
+    newContainer.querySelector("#bodyfield").innerText = initialValue;
     newContainer.querySelector("#bodyfield").classList.add("edit--input");
     newContainer.querySelector("#bodyfield").setAttribute("id", "editfield");
 
@@ -471,7 +471,58 @@ function editComment(docId, buttonElement){
 
     submitButton.parentNode.appendChild(cancelButton);
 
-    parentElement.insertBefore(newContainer, commentContainerChildren[parentIndex + 1]);
+    parentElement.appendChild(newContainer);
+}
+
+function editReply(docId, buttonElement, initialValue){
+    closeEditReplyField();
+    
+    var parentElement = buttonElement.parentNode.parentNode;
+    var submitContainer = document.getElementById("submit--container");
+    var commentContainerChildren = parentElement.parentNode.children;
+    var parentIndex = Array.prototype.indexOf.call(commentContainerChildren, parentElement);
+    
+    var newContainer = submitContainer.cloneNode(true);
+    newContainer.setAttribute("id", "editreply--container");
+    newContainer.classList.add("edit--container");
+
+    newContainer.querySelector("#bodyfield").innerText = initialValue;
+    newContainer.querySelector("#bodyfield").classList.add("editreply--input");
+    newContainer.querySelector("#bodyfield").setAttribute("id", "editreplyfield");
+
+    var submitButton = newContainer.querySelector("#submit");
+    submitButton.classList.add("reply--submit");
+    submitButton.setAttribute("onclick", "submitReplyEdit('" + docId + "');")
+
+    var cancelButton = submitButton.cloneNode(true);
+    cancelButton.classList.remove("greenbutton");
+    cancelButton.classList.remove("redbutton");
+    cancelButton.innerText = "Cancel";
+    cancelButton.setAttribute("onclick", "closeEditReplyField()");
+
+    submitButton.parentNode.appendChild(cancelButton);
+
+    parentElement.appendChild(newContainer);
+}
+
+function closeEditReplyField() {
+    var oldEditContainer = document.getElementById("editreply--container");
+    if (oldEditContainer != null){
+        oldEditContainer.remove();
+    }
+}
+
+function submitReplyEdit(docID){
+    var editText =  document.getElementById("editreplyfield").innerText
+    db.collection("replies").doc(docID).set({
+        body: editText
+    }, { merge: true }).then(() => {
+        alert("Reply edited succesfully!");
+        location.reload();
+    } )
+    .catch((error) => {
+        logFirebaseError(error);
+    });
 }
 
 function closeEditField() {
@@ -487,7 +538,7 @@ function submitEdit(docID){
         body: editText
     }, { merge: true }).then(() => {
         alert("Comment edited succesfully!");
-        loadComments(sessionStorage.getItem("currentID"));
+        location.reload();
     } )
     .catch((error) => {
         logFirebaseError(error);

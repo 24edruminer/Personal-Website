@@ -19,7 +19,7 @@ const firebaseConfig = {
   const db = firebase.firestore();
 
 currentUser = null;
-
+curName = null;
 function universalSetup() {
   getStoredUser();
   if (currentUser == null){
@@ -37,21 +37,34 @@ function universalSetup() {
     });
   }else{
     console.log(currentUser);
-    var dispName = currentUser.email.split("@")[0];
+    var dispName = curName;
     var navbar = document.getElementsByClassName("navbar")[0];
     navbar.children[2].textContent = "Profile: " + dispName;
-    if (dispName != "erumi321" && dispName != "24edruminer") {
+    if (currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2") {
       navbar.children[1].remove();
     }
   }
+
+  var textfields = document.getElementsByClassName("body--input"); 
+for(i=0; i<textfields.length; i++){
+    textfields[i].addEventListener("keydown", function(e) {
+        setTimeout(() => {console.log("hehe"); document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerHTML.length}, 10);
+        if(this.innerHTML.length > this.getAttribute("max")){
+            e.preventDefault();
+            return false;
+        }
+    }, false);
+}
 }
 
 function getStoredUser(){
   var stored = localStorage.getItem('storedUser');
   if (stored != null) {
     currentUser = JSON.parse(localStorage.getItem('storedUser'));
+    curName = (currentUser || {displayName: ""}).displayName;
   }else{
     currentUser = null;
+    curName = null;
   }
 } 
 

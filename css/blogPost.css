@@ -75,3 +75,13 @@
     content: "Enter new text: ";
     color: rgb(118, 118, 118);
 }
+
+.editreply--input {
+    width: 50vw;
+    text-align: left;
+}
+
+.editreply--input[contenteditable]:empty::before {
+    content: "Enter new reply text: ";
+    color: rgb(118, 118, 118);
+}
