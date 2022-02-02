@@ -37,7 +37,7 @@ function universalSetup() {
     });
   }else{
     console.log(currentUser);
-    var dispName = currentUser.displayName || currentUser.email.split("@")[0];
+    var dispName = currentUser.email.split("@")[0];
     var navbar = document.getElementsByClassName("navbar")[0];
     navbar.children[2].textContent = "Profile: " + dispName;
     if (dispName != "erumi321" && dispName != "24edruminer") {

@@ -10,7 +10,7 @@ function loadFirebasePage(){
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             document.getElementById("title").innerText = doc.data().title;
-            var curName = currentUser.displayName || currentUser.email.split("@")[0];
+            var curName = (currentUser || {email: ""}).email.split("@")[0];
             if (doc.data().createdby == curName || curName == "erumi321" || curName == "24edruminer"){
                 const titleBar = document.getElementById("title--bar");
                 
@@ -25,6 +25,20 @@ function loadFirebasePage(){
                 
                 deleteButton.appendChild(deleteImg);
                 titleBar.appendChild(deleteButton);
+
+                const editButton = document.createElement("btn");
+                editButton.classList.add("comment--replybtn")
+                
+                //Need String.raw`` because without it the quotes and other escape sequences inside would cause an error 
+                editButton.setAttribute("onclick", "editPost('" + doc.id + "', String.raw`" + doc.data().body + "`);");
+    
+                const editImg = document.createElement("img");
+                editImg.setAttribute("src", "Images/EditIcon.png");
+                editImg.setAttribute("width", "20vh");
+                editImg.setAttribute("height", "20vh");
+                
+                editButton.appendChild(editImg);
+                titleBar.appendChild(editButton);
             }
             // document.getElementById("body").innerText = doc.data().body;
             formatBody(doc.data().body);
@@ -33,7 +47,7 @@ function loadFirebasePage(){
         });
     })
     .catch((error) => {
-        logFirebaseError(error)
+        console.log(error);
     });
 }
 
@@ -49,9 +63,18 @@ function formatBody(text) {
             pElement.innerText = comArg[0];
             bodyContainer.appendChild(pElement);
         }else{
-            const newElement = document.createElement("htmlElement");
-            bodyContainer.appendChild(newElement);
-            newElement.outerHTML = comArg[1];
+            var parentElement = bodyContainer;
+            //Any code before the /~~/ will be the parent of the second code, only supports 1 parent
+            if (comArg[0] != ""){
+                const parElement = document.createElement("div");
+                console.log(comArg[0].trim());
+                parElement.innerHTML = comArg[0].trim();
+                bodyContainer.appendChild(parElement); 
+                parentElement = parElement.children[0];
+            }
+            const newElement = document.createElement("div");
+            newElement.innerHTML = comArg[1].trim();
+            parentElement.appendChild(newElement);
         }
     }
 }
@@ -61,7 +84,7 @@ function loadComments(postID) {
     if (currentUser == null) {
         document.getElementById("submit--container").remove();
     }else{
-        curName = currentUser.displayName || currentUser.email.split("@")[0];
+        curName = currentUser.email.split("@")[0];
     }
     
     db.collection("comments").orderBy("createdat", "desc").where("linkedto", "==", postID)
@@ -201,12 +224,69 @@ function loadComments(postID) {
     });
 }
 
+function editPost(docId, postBody){
+    const bodyContainer = document.getElementById("body--container");
+    bodyContainer.setAttribute("style", "display: none;");
+
+    var parentElement = bodyContainer.parentNode;
+    var submitContainer = document.getElementById("submit--container");
+    var mainChildren = parentElement.children;
+    var parentIndex = Array.prototype.indexOf.call(mainChildren, parentElement);
+    
+    var newContainer = submitContainer.cloneNode(true);
+    newContainer.setAttribute("id", "editpost--container");
+    newContainer.classList.add("editpost--container");
+
+    newContainer.querySelector("#bodyfield").innerText = postBody;
+    newContainer.querySelector("#bodyfield").classList.add("edit--input");
+    newContainer.querySelector("#bodyfield").setAttribute("style", "width: 75vw;");
+    newContainer.querySelector("#bodyfield").setAttribute("id", "editpostfield");
+
+    var submitButton = newContainer.querySelector("#submit");
+    submitButton.classList.add("reply--submit");
+    submitButton.setAttribute("onclick", "submitPostEdit('" + docId + "');")
+
+    var cancelButton = submitButton.cloneNode(true);
+    cancelButton.classList.remove("greenbutton");
+    cancelButton.classList.remove("redbutton");
+    cancelButton.innerText = "Cancel";
+    cancelButton.setAttribute("onclick", "closeEditPostField()");
+
+    submitButton.parentNode.appendChild(cancelButton);
+
+    const centerParent = document.createElement("center");
+    centerParent.appendChild(newContainer);
+
+    parentElement.insertBefore(centerParent, mainChildren[parentIndex + 3]);
+}
+
+function closeEditPostField() {
+    const editContainer = document.getElementById("editpost--container");
+    editContainer.parentNode.remove();
+
+    const bodyContainer = document.getElementById("body--container");
+    bodyContainer.setAttribute("style", "margin: 5vw;");
+}
+
+function submitPostEdit(docID){
+    var editText =  document.getElementById("editpostfield").innerText
+    db.collection("blogposts").doc(docID).set({
+        body: editText
+    }, { merge: true }).then(() => {
+        alert("Post edited succesfully!");
+        location.reload();
+    } )
+    .catch((error) => {
+        logFirebaseError(error);
+    });
+}
+
 function submitComment() {
     var docID = Date.now();
     var linkedTo = sessionStorage.getItem("currentID");
     var body = document.getElementById("bodyfield").innerText;
     document.getElementById("bodyfield").innerText = "";
-    var dispName = currentUser.displayName || currentUser.email.split("@")[0];
+    var dispName = currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
     db.collection("comments").add({
@@ -233,7 +313,7 @@ function submitReply(docId) {
     var newDocId = Date.now();
     var title = sessionStorage.getItem("currentPage");
     var body = document.getElementById("replyfield").innerText;
-    var dispName = currentUser.displayName || currentUser.email.split("@")[0];
+    var dispName = currentUser.email.split("@")[0];
     if (body != null && body != "") {
     // Add a new document in collection "cities"
     db.collection("replies").add({
@@ -294,8 +374,6 @@ function closeReplyField() {
 }
 
 function deletePost(docID){
-    console.log("hey");
-    var batch = db.batch();
     db.collection("blogposts").doc(docID).delete().then(() => {
         db.collection("comments").where("linkedto", "==", docID)
         .get()

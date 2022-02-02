@@ -19,44 +19,45 @@ function signup() {
   }
 }
 
-function checkSignIn() {
-  if (currentUser == null) {
-    firebase.auth()
-    .getRedirectResult()
-    .then((result) => {
-      alert("Signed in");
-      location.href = "index.html";
-    }).catch((error) => {
-      logFirebaseError(error);
-    });
-  }
-}
-
-function login() {
-  if (currentUser == null){
-    firebase.auth().signInWithRedirect(provider).then(() => {
-      alert("Signed in");
-      location.href="index.html";
-    });
-
-  }else{
-    alert("Already signed in!");
-  }
-}
-
 function deleteaccount() {
   if (confirm('Are you sure you want to delete your account?')) {
     const user = firebase.auth().currentUser;
-    user.delete().then(() => {
-      alert("Deleted!");
-      logout();
-    }).catch((error) => {
-      logFirebaseError(error)
-    });
+      var curName = currentUser.email.split("@")[0];
+      deleteComments(curName);
+      user.delete().then(() => {
+        alert("Deleted!");
+        logout();
+      }).catch((error) => {
+        logFirebaseError(error)
+      });
   } else {
     // Do nothing!
     console.log('Thing was not saved to the database.');
   }
+}
+
+function deleteComments(userName){
+  console.log(userName);
+    db.collection("comments").where("createdby", "==", userName)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((comment) => {
+          console.log("comment");
+            db.collection("comments").doc(comment.id).delete();
+        })
+    }).catch((error) => {
+      logFirebaseError(error);
+  });
+  db.collection("replies").where("createdby", "==", userName)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((reply) => {
+        console.log("reply");
+          db.collection("replies").doc(reply.id).delete();
+      })
+  }).catch((error) => {
+    logFirebaseError(error);
+  })
 }
 
 function logout() {
@@ -83,10 +84,31 @@ function logout() {
 
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
-ui.start('#firebaseui-auth-container', {
+var uiConfig = {
+  callbacks: {
+    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+      console.log(authResult);
+      currentUser = authResult.user;
+      localStorage.setItem('storedUser', JSON.stringify(authResult.user));
+      alert("Signed In");
+      return true;
+    },
+    uiShown: function() {
+      // The widget is rendered.
+      // Hide the loader.
+      document.getElementsByClassName("firebaseui-idp-text")[0].innerText = "Sign in/up with Google"
+      var parEle = document.getElementsByClassName("firebaseui-idp-text")[0].parentElement
+      parEle.setAttribute("style", parEle.getAttribute("style") + ";max-width: 240px;");
+    }
+  },
+  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+  signInFlow: 'popup',
+  signInSuccessUrl: 'index.html',
   signInOptions: [
-    // List of OAuth providers supported.
+    // Leave the lines as is for the providers you want to offer your users.
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
   ],
-  // Other config options...
-});
+
+};
+
+ui.start('#firebaseui-auth-container', uiConfig);

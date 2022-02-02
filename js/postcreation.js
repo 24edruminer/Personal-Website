@@ -4,7 +4,7 @@ function postcreationLoad() {
         alert("Begone... you venture to a place more desolate than the one to which you have been exiled.")
         location.href = "index.html";
     }
-    var dispName = currentUser.displayName || currentUser.email.split("@")[0];
+    var dispName = currentUser.email.split("@")[0];
 
     if (dispName != "erumi321" && dispName != "24edruminer") {
       alert("Begone... you venture to a place more desolate than the one to which you have been exiled.")
@@ -17,7 +17,7 @@ function submitNewPost() {
   var title = document.getElementById("titlefield").value;
   var body = document.getElementById("bodyfield").innerText;
   console.log(body);
-  var dispName = currentUser.displayName || currentUser.email.split("@")[0];
+  var dispName = currentUser.email.split("@")[0];
   // Add a new document in collection "cities"
   db.collection("blogposts").add({
     title: title,

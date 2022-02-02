@@ -7,10 +7,6 @@ body {
     background-color: #fdd8fd;
 }
 
-.main {
-    background-color: #fff;
-}
-
 h1 {
     font-family: 'Bebas Neue', cursive;
     font-size: 3em;
@@ -22,8 +18,10 @@ h2 {
 
 .main {
     width: 80%;
-    min-height: 94vh;
+    min-height: 93vh;
     margin: auto;
+    background-color: #fff;
+    padding-bottom: 1vh;
 }
 
 .center {
@@ -87,10 +85,6 @@ h2 {
 
 body {
     background-color: #fdd8fd;
-}
-
-.main {
-    background-color: #fff;
 }
 
 .postlink--item {
