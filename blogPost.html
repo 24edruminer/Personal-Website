@@ -6,8 +6,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title id="page--head--title">Eli's Blog - </title>
+        <script src="https://use.fontawesome.com/2484c6a62f.js"></script>
         <link rel="stylesheet" href="css/universal.css">
         <link rel="stylesheet" href="css/blogPost.css">
+        <link rel="stylesheet" href="css/heart.css">
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
@@ -38,8 +40,12 @@
                 <h1 style="display: inline; " id="title">
                     Unloaded title
                 </h1>
+                    <div style="display: inline;" class="comment--replybtn">
+                        <i id="heart" style="padding: 0px;" onclick="likePost(this);"></i>
+                        <p id="likedbycount">Likes: 0</p>
+                    </div>
             </div>
-            <hr style="width: 50%; border-top-width: 1vh;">
+            <hr style="width: 80%; border-top-width: 1vh;">
             <div style="margin: 5vw;" id="body--container">
                 
             </div>

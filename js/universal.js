@@ -40,17 +40,19 @@ function universalSetup() {
     var dispName = curName;
     var navbar = document.getElementsByClassName("navbar")[0];
     navbar.children[2].textContent = "Profile: " + dispName;
-    if (currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2") {
+    if (currentUser.uid != "rsNNG9JlJjaZqgkla7dUI0p28RD2" && currentUser.uid != "ZsB7WbdO87X5oPNj8QkDSM8YOq53") {
       navbar.children[1].remove();
     }
   }
 
-  var textfields = document.getElementsByClassName("body--input"); 
+  var textfields = document.getElementsByClassName("namefield--input"); 
 for(i=0; i<textfields.length; i++){
     textfields[i].addEventListener("keydown", function(e) {
-        setTimeout(() => {console.log("hehe"); document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerHTML.length}, 10);
+        setTimeout(() => {document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerHTML.length}, 10);
         if(this.innerHTML.length > this.getAttribute("max")){
             e.preventDefault();
+            this.innerText = this.innerText.substring(0,24);
+            alert("Too many characters!");
             return false;
         }
     }, false);

@@ -15,6 +15,7 @@
     text-align: left;
     align-self: left;
     /* float: left; */
+    font-weight: 1000;
     margin: 5px 0 0 0;
 }
 
@@ -85,3 +86,4 @@
     content: "Enter new reply text: ";
     color: rgb(118, 118, 118);
 }
+

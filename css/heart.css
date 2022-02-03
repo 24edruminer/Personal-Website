@@ -1,0 +1,42 @@
+ 
+  i {
+    cursor:pointer;
+    padding:10px 12px 8px;
+    background:#fff;
+    border-radius:50%;
+    display:inline;
+    margin:0 0 15px;
+    color:#aaa;
+    transition:.2s;
+    font-size: 1.3em;
+    width: 20vh;
+    height: 20vh;
+}
+  
+  i:hover {
+    color:#666;
+  }
+  
+  i:before {
+    font-family:fontawesome;
+    content:'\f004';
+    font-style:normal;
+  }
+
+  i.press {
+    animation: size .4s;
+    color:#e23b3b;
+  }
+  
+  @keyframes fade {
+    0% {color: transparent;}
+    50% {color: #e23b3b;}
+    100% {color: transparent;}
+  }
+  
+  @keyframes size {
+    0% {padding:0px;}
+    50% {padding:0px;  
+      margin-top:-4px;}
+    100% {padding:0px;}
+  }

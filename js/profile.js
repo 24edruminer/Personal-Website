@@ -5,6 +5,7 @@ function profileSetup() {
   }
   document.getElementById("namefield").innerText = dispname;
   document.getElementById("curLengthID").innerText = dispname.length;
+  document.getElementById("colorselector").value = (currentUser.photoURL || "#000000");
 }
 
 function signup() {
@@ -92,7 +93,6 @@ function logout() {
 
 function submitDisplayName() {
   const user = firebase.auth().currentUser;
-  console.log(document.getElementById("namefield").innerText);
   user.updateProfile({
     displayName: document.getElementById("namefield").innerText
   }).then(() => {
@@ -104,6 +104,20 @@ function submitDisplayName() {
     logFirebaseError(error);
   });  
 }
+
+function submitDisplayColor() {
+  const user = firebase.auth().currentUser;
+  user.updateProfile({
+    photoURL: document.getElementById("colorselector").value
+  }).then(() => {
+    localStorage.setItem("storedUser", JSON.stringify(user));
+    location.reload();
+    alert("Updated account succesfully!");
+  }).catch((error) => {
+    logFirebaseError(error);
+  });  
+}
+
 // Initialize the FirebaseUI Widget using Firebase.
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 var uiConfig = {
@@ -112,8 +126,21 @@ var uiConfig = {
       console.log(authResult);
       currentUser = authResult.user;
       localStorage.setItem('storedUser', JSON.stringify(authResult.user));
-      alert("Signed In");
-      return true;
+      const user = firebase.auth().currentUser;
+      if (user.photoURL == null || user.photoURL.charAt(0) != '#') {
+        user.updateProfile({
+          photoURL: "#000000"
+        }).then(() => {
+          alert("Signed In");
+          return true;
+        }).catch((error) => {
+          logFirebaseError(error);
+          return true;
+        }); 
+      }else{
+        alert("Signed In");
+        return true;
+      }
     },
     uiShown: function() {
       // The widget is rendered.

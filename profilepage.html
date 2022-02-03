@@ -57,13 +57,23 @@
                                     <div style="display: inline-block; vertical-align: top;">
                                         <p style="display: inline-block;">Display Name: </p>
                                     </div>
-                                    <span style="display: inline-block;" class="body--input" role="textbox" id="namefield" max="25" curLengthID="curLengthID" contenteditable></span>
+                                    <span style="display: inline-block;" class="body--input namefield--input" role="textbox" id="namefield" max="25" curLengthID="curLengthID" contenteditable></span>
                                     <div style="display: inline-block">
                                         <p id="curLengthID" style="display: inline-block"></p>
                                         <p style="display: inline-block">/25</p>
                                     </div>
                                     <button style="display: inline-block; margin: 16px 0; vertical-align: top;" class="confirmbutton greenbutton" onclick="submitDisplayName()">
                                         Save Name
+                                    </button>
+                                </div>
+                                <div id="color">
+                                    <div style="display: inline-block;">
+                                        <p style="display: inline-block;">Display Name: </p>
+                                    </div>
+                                    <input type="color" id="colorselector" name="colorselector"
+                                    value="#000000">
+                                    <button style="display: inline-block; margin: 16px 0; vertical-align: top; margin-top: 20px; width: 140px;" class="confirmbutton greenbutton" onclick="submitDisplayColor()">
+                                        Save Color
                                     </button>
                                 </div>
                             </center>                            

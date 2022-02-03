@@ -1,3 +1,5 @@
+postLikes = [];
+
 function loadFirebasePage(){
     var title = sessionStorage.getItem("currentPage");
     db.collection("blogposts").where("title", "==", title)
@@ -10,7 +12,7 @@ function loadFirebasePage(){
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             document.getElementById("title").innerText = doc.data().title;
-            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2"){
+            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53"){
                 const titleBar = document.getElementById("title--bar");
                 
                 const deleteButton = document.createElement("btn");
@@ -38,6 +40,14 @@ function loadFirebasePage(){
                 
                 editButton.appendChild(editImg);
                 titleBar.appendChild(editButton);
+            }
+
+            postLikes = doc.data().likedby;
+            if (postLikes != undefined){
+                if (postLikes.includes(currentUser.uid)){
+                    document.getElementById("heart").classList.toggle("press");
+                }
+                document.getElementById("likedbycount").innerText = "Likes: " + postLikes.length;
             }
             // document.getElementById("body").innerText = doc.data().body;
             formatBody(doc.data().body);
@@ -99,14 +109,14 @@ function loadComments(postID) {
             const createdby = document.createElement("p");
             createdby.classList.add("comment--title");
             createdby.innerText = doc.data().createdby;
-            createdby.setAttribute("style", "display: inline;");
+            createdby.setAttribute("style", "display: inline; color: " + (doc.data().color || "#000000") + ";");
             topBar.appendChild(createdby);
 
             const p = document.createElement("p");
             p.classList.add("comment--text");
             p.innerText = doc.data().body;
 
-            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2"){
+            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53"){
                 const deleteButton = document.createElement("btn");
                 deleteButton.classList.add("comment--replybtn")
                 deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
@@ -164,7 +174,7 @@ function loadComments(postID) {
                     replyContainer.setAttribute("docId", reply.id);
                     replyContainer.setAttribute("isComment", false);
         
-                    if (reply.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2"){
+                    if (reply.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53"){
                         const topBar = document.createElement("div");
                         topBar.classList.add("comment--topbar");
 
@@ -198,6 +208,7 @@ function loadComments(postID) {
                     const createdby = document.createElement("p");
                     createdby.classList.add("comment--title");
                     createdby.innerText = reply.data().createdby;
+                    createdby.setAttribute("style", "color: " + (doc.data().color || "#000000") + ";");
         
                     const p = document.createElement("p");
                     p.classList.add("comment--text");
@@ -291,7 +302,8 @@ function submitComment() {
         createdby: dispName,
         createdat: docID,
         linkedto: linkedTo,
-        createdUID: currentUser.uid
+        createdUID: currentUser.uid,
+        color: currentUser.photoURL
       })
       .then(() => {
         alert("Comment Posted!");
@@ -319,7 +331,8 @@ function submitReply(docId) {
         createdby: dispName,
         createdat: newDocId,
         replyto: docId,
-        createdUID: currentUser.uid
+        createdUID: currentUser.uid,
+        color: currentUser.photoURL
       })
       .then(() => {
         alert("Reply Posted!");
@@ -543,4 +556,43 @@ function submitEdit(docID){
     .catch((error) => {
         logFirebaseError(error);
     });
+}
+
+function likePost(btnElement){
+    btnElement.classList.toggle("press");
+    
+    if(btnElement.classList.contains("press")) {
+        if (postLikes == undefined || !postLikes.includes(currentUser.uid)) {
+            if (postLikes == undefined) {
+                postLikes = [currentUser.uid];
+            }else{
+                postLikes.push(currentUser.uid);
+            }
+            updatePostLikes();
+        }
+    }else{
+        if (postLikes.length > 0 && postLikes.includes(currentUser.uid)) {
+            const index = postLikes.indexOf(currentUser.uid);
+            if (index > -1) {
+                postLikes.splice(index, 1); // 2nd parameter means remove one item only
+            }
+            updatePostLikes();
+        } 
+    }
+}
+
+function updatePostLikes() {
+    db.collection("blogposts").doc(sessionStorage.getItem("currentID")).set({
+        likedby: postLikes
+    }, { merge: true }).then(() => {
+        document.getElementById("likedbycount").innerText = "Likes: " + postLikes.length;
+    } )
+    .catch((error) => {
+        logFirebaseError(error);
+    });
+}
+
+function moveBaba(width) {
+    document.getElementById("baba").setAttribute("style", "margin-left: " + width + "px;");
+    setTimeout(moveBaba(width + 5), 50);
 }
