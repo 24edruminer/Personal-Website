@@ -6,7 +6,7 @@ function postcreationLoad() {
     }
     var dispName = curName
 
-    if (currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2") {
+    if (currentUser.uid != "rsNNG9JlJjaZqgkla7dUI0p28RD2" && currentUser.uid != "ZsB7WbdO87X5oPNj8QkDSM8YOq53") {
       alert("Begone... you venture to a place more desolate than the one to which you have been exiled.")
       location.href = "index.html";
     }
