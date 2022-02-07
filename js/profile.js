@@ -1,12 +1,20 @@
 function profileSetup() {
-  var dispname = curName;
-  if (curName.length > 25){
-    dispname = dispname.substring(0, 25);
+  if (currentUser != null || curName != null){
+    var dispname = curName;
+    if (curName.length > 25){
+      dispname = dispname.substring(0, 25);
+    }
+    document.getElementById("namefield").innerText = dispname;
+    document.getElementById("curLengthID").innerText = dispname.length;
+    console.log(currentUser.currentColor);
+    document.getElementById("colorselector").value = currentUser.currentColor || "#000000";
+  }else{
+    document.getElementById("displayname").remove();
+    document.getElementById("color").remove();
+    document.getElementById("signedinas").remove();
+    
   }
-  document.getElementById("namefield").innerText = dispname;
-  document.getElementById("curLengthID").innerText = dispname.length;
-  console.log(currentUser.currentColor);
-  document.getElementById("colorselector").value = currentUser.currentColor || "#000000";
+
   document.getElementsByTagName("body")[0].classList.toggle("hidden");
 }
 
@@ -84,6 +92,7 @@ function logout() {
       }
       currentUser = null;
       localStorage.setItem("storedUser", null);
+      location.reload();
     }).catch((error) => {
       logFirebaseError(error)
     });

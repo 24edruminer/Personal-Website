@@ -12,7 +12,7 @@ function loadFirebasePage(){
         querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             document.getElementById("title").innerText = doc.data().title;
-            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53"){
+            if (curName != null && currentUser != null && (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53")){
                 const titleBar = document.getElementById("title--bar");
                 
                 const deleteButton = document.createElement("btn");
@@ -44,7 +44,7 @@ function loadFirebasePage(){
 
             postLikes = doc.data().likedby;
             if (postLikes != undefined){
-                if (postLikes.includes(currentUser.uid)){
+                if (currentUser != null && postLikes.includes(currentUser.uid)){
                     document.getElementById("heart").classList.toggle("press");
                 }
                 document.getElementById("likedbycount").innerText = "Likes: " + postLikes.length;
@@ -116,7 +116,7 @@ function loadComments(postID) {
             } )
             .catch((error) => {
                 // console.log(error);
-                logFirebaseError(error);
+                console.log(error);
             });
             
             topBar.appendChild(createdby);
@@ -125,7 +125,7 @@ function loadComments(postID) {
             p.classList.add("comment--text");
             p.innerText = doc.data().body;
 
-            if (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53"){
+            if (currentUser != null && (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53")){
                 const deleteButton = document.createElement("btn");
                 deleteButton.classList.add("comment--replybtn")
                 deleteButton.setAttribute("onclick", "deleteComment('" + doc.id + "', this);");
@@ -183,7 +183,7 @@ function loadComments(postID) {
                     replyContainer.setAttribute("docId", reply.id);
                     replyContainer.setAttribute("isComment", false);
         
-                    if (reply.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53"){
+                    if (currentUser != null && (doc.data().createdby == curName || currentUser.uid == "rsNNG9JlJjaZqgkla7dUI0p28RD2" || currentUser.uid == "ZsB7WbdO87X5oPNj8QkDSM8YOq53")){
                         const topBar = document.createElement("div");
                         topBar.classList.add("comment--topbar");
 
@@ -217,14 +217,14 @@ function loadComments(postID) {
                     const createdby = document.createElement("p");
                     createdby.classList.add("comment--title");
                     createdby.innerText = reply.data().createdby;
-
-                    db.collection("usercolor").doc(doc.data().createdUID).get().then((colorData) => {
-                        console.log(colorData.data());
+                    console.log(reply.data());
+                    db.collection("usercolor").doc(reply.data().createdUID).get().then((colorData) => {
+                        console.log("heh", colorData.data());
                         createdby.setAttribute("style", "margin: 0 0 0 0; color: " + (colorData.data() || {color: "#000000"}).color + ";");
                     } )
                     .catch((error) => {
                         // console.log(error);
-                        logFirebaseError(error);
+                        console.log(error);
                     });
         
                     const p = document.createElement("p");
@@ -237,14 +237,14 @@ function loadComments(postID) {
                 });
 
             }).catch((error) => {
-                logFirebaseError(error);
+                console.log(error);
             });
 
         });
         document.getElementsByTagName("body")[0].classList.remove("hidden");
     })
     .catch((error) => {
-        logFirebaseError(error)
+        console.log(error)
     });
 }
 
@@ -301,7 +301,7 @@ function submitPostEdit(docID){
         location.reload();
     } )
     .catch((error) => {
-        logFirebaseError(error);
+        console.log(error);
     });
 }
 
@@ -327,7 +327,7 @@ function submitComment() {
         console.log("Document successfully written!");
       })
       .catch((error) => {
-          logFirebaseError(error);
+          console.log(error);
       });
     }else{
         alert("Comment text empty");
@@ -355,7 +355,7 @@ function submitReply(docId) {
         console.log("Document successfully written!");
       })
       .catch((error) => {
-          logFirebaseError(error);
+          console.log(error);
       });
     }else{
         alert("Reply text empty");
@@ -419,7 +419,7 @@ function deletePost(docID){
     alert("Dey-ley-tey");
     location.href = "index.html";
     }).catch((error) => {
-        logFirebaseError(error);
+        console.log(error);
     });
 }
 
@@ -456,7 +456,7 @@ function removeCommentItem(element, ignoreMessage) {
             }
             location.reload();
         }).catch((error) => {
-            logFirebaseError(error);
+            console.log(error);
         });
     }else{
         db.collection("replies").doc(element.getAttribute("docID")).delete().then(() => {
@@ -466,7 +466,7 @@ function removeCommentItem(element, ignoreMessage) {
             }
             location.reload();
         }).catch((error) => {
-            logFirebaseError(error);
+            console.log(error);
         });
     }
 }
@@ -549,7 +549,7 @@ function submitReplyEdit(docID){
         location.reload();
     } )
     .catch((error) => {
-        logFirebaseError(error);
+        console.log(error);
     });
 }
 
@@ -569,7 +569,7 @@ function submitEdit(docID){
         location.reload();
     } )
     .catch((error) => {
-        logFirebaseError(error);
+        console.log(error);
     });
 }
 
@@ -577,7 +577,7 @@ function likePost(btnElement){
     btnElement.classList.toggle("press");
     
     if(btnElement.classList.contains("press")) {
-        if (postLikes == undefined || !postLikes.includes(currentUser.uid)) {
+        if (currentUser != null && (postLikes == undefined || !postLikes.includes(currentUser.uid))) {
             if (postLikes == undefined) {
                 postLikes = [currentUser.uid];
             }else{
@@ -603,7 +603,7 @@ function updatePostLikes() {
         document.getElementById("likedbycount").innerText = "Likes: " + postLikes.length;
     } )
     .catch((error) => {
-        logFirebaseError(error);
+        console.log(error);
     });
 }
 
