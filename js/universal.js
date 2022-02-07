@@ -63,15 +63,17 @@ function getStoredUser(callback){
   var stored = localStorage.getItem('storedUser');
   if (stored != null) {
     currentUser = JSON.parse(localStorage.getItem('storedUser'));
+    if (currentUser.uid != null) {
     db.collection("usercolor").doc(currentUser.uid).get().then((doc) => {
-      currentUser.currentColor = doc.data().color;
-      if (callback != null) {
-        callback();
-      }
-  } )
-  .catch((error) => {
-      logFirebaseError(error);
-  });
+          currentUser.currentColor = doc.data().color;
+          if (callback != null) {
+            callback();
+          }
+      } )
+      .catch((error) => {
+          logFirebaseError(error);
+      });
+    }
     curName = (currentUser || {displayName: ""}).displayName;
   }else{
     currentUser = null;
