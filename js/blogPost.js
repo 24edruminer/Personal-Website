@@ -109,7 +109,16 @@ function loadComments(postID) {
             const createdby = document.createElement("p");
             createdby.classList.add("comment--title");
             createdby.innerText = doc.data().createdby;
-            createdby.setAttribute("style", "display: inline; color: " + (doc.data().color || "#000000") + ";");
+
+            db.collection("usercolor").doc(doc.data().createdUID).get().then((colorData) => {
+                console.log(colorData.data());
+                createdby.setAttribute("style", "display: inline; color: " + (colorData.data() || {color: "#000000"}).color + ";");
+            } )
+            .catch((error) => {
+                // console.log(error);
+                logFirebaseError(error);
+            });
+            
             topBar.appendChild(createdby);
 
             const p = document.createElement("p");
@@ -208,7 +217,15 @@ function loadComments(postID) {
                     const createdby = document.createElement("p");
                     createdby.classList.add("comment--title");
                     createdby.innerText = reply.data().createdby;
-                    createdby.setAttribute("style", "color: " + (doc.data().color || "#000000") + ";");
+
+                    db.collection("usercolor").doc(doc.data().createdUID).get().then((colorData) => {
+                        console.log(colorData.data());
+                        createdby.setAttribute("style", "margin: 0 0 0 0; color: " + (colorData.data() || {color: "#000000"}).color + ";");
+                    } )
+                    .catch((error) => {
+                        // console.log(error);
+                        logFirebaseError(error);
+                    });
         
                     const p = document.createElement("p");
                     p.classList.add("comment--text");
@@ -303,7 +320,6 @@ function submitComment() {
         createdat: docID,
         linkedto: linkedTo,
         createdUID: currentUser.uid,
-        color: currentUser.photoURL
       })
       .then(() => {
         alert("Comment Posted!");
@@ -332,7 +348,6 @@ function submitReply(docId) {
         createdat: newDocId,
         replyto: docId,
         createdUID: currentUser.uid,
-        color: currentUser.photoURL
       })
       .then(() => {
         alert("Reply Posted!");

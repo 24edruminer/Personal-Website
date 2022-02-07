@@ -20,8 +20,8 @@ const firebaseConfig = {
 
 currentUser = null;
 curName = null;
-function universalSetup() {
-  getStoredUser();
+function universalSetup(callback) {
+  getStoredUser(callback);
   if (currentUser == null){
     var navbar = document.getElementsByClassName("navbar")[0];
     navbar.children[2].textContent = "Profile"
@@ -59,10 +59,19 @@ for(i=0; i<textfields.length; i++){
 }
 }
 
-function getStoredUser(){
+function getStoredUser(callback){
   var stored = localStorage.getItem('storedUser');
   if (stored != null) {
     currentUser = JSON.parse(localStorage.getItem('storedUser'));
+    db.collection("usercolor").doc(currentUser.uid).get().then((doc) => {
+      currentUser.currentColor = doc.data().color;
+      if (callback != null) {
+        callback();
+      }
+  } )
+  .catch((error) => {
+      logFirebaseError(error);
+  });
     curName = (currentUser || {displayName: ""}).displayName;
   }else{
     currentUser = null;
