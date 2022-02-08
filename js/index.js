@@ -1,3 +1,4 @@
+//Create a list of all the posts ordered by most recent to oldest
 function populatePostList() {
     db.collection("blogposts")
     .orderBy("createdat", "desc")
@@ -5,7 +6,7 @@ function populatePostList() {
     .then((querySnapshot) => {
         console.log(querySnapshot)
         querySnapshot.forEach((doc) => {
-            console.log("hey?")
+
             const li = document.createElement("li");
             li.classList.add("postlink--item");
             const p = document.createElement("p");
@@ -16,14 +17,17 @@ function populatePostList() {
             const element = document.getElementById("post--container");
             element.appendChild(li);
 
+            //when opening the page pass the id and title
             li.setAttribute("onclick", "openPostPage('" + doc.data().title + "', '" + doc.id + "');");
         });
     })
     .catch((error) => {
-        logFirebaseError(error)
+        console.log(error);
+        alert(error);
     });
 }
 
+//set the title and id for use when loading the page
 function openPostPage(title, id){
     sessionStorage.setItem("currentPage", title);
     sessionStorage.setItem("currentID", id);

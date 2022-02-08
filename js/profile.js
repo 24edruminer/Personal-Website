@@ -1,100 +1,88 @@
+//Allows the loading of the color before it sets up the values
+function callback() {
+  setTimeout(() => {
+    profileSetup();
+  }, 400)
+}
+
+//Set the pre-loaded values of the profile page from data stored in the database 
 function profileSetup() {
   if (currentUser != null || curName != null){
     var dispname = curName;
     if (curName.length > 25){
+      //reset the textfield in case it was manually edited in the console to increase its size
       dispname = dispname.substring(0, 25);
     }
+    //setup fields with user's data
     document.getElementById("namefield").innerText = dispname;
     document.getElementById("curLengthID").innerText = dispname.length;
-    console.log(currentUser.currentColor);
     document.getElementById("colorselector").value = currentUser.currentColor || "#000000";
   }else{
+    //if not signed in then remove fields relating to signed in user data
     document.getElementById("displayname").remove();
     document.getElementById("color").remove();
     document.getElementById("signedinas").remove();
-    
   }
 
+  //body is done being setup so show it
   document.getElementsByTagName("body")[0].classList.toggle("hidden");
 }
 
-function signup() {
-  if (currentUser == null){
-    firebase.auth().createUserWithEmailAndPassword(document.getElementById("namefield").value, document.getElementById("passfield").value)
-    .then((userCredential) => {
-      // Signed in 
-      firebase.auth().currentUser.sendEmailVerification()
-      .then(() => {
-        alert("Created and signed in!");
-        location.href="index.html";
-        currentUser = userCredential.user;
-        localStorage.setItem("userCredential", userCredential.user);
-    });
-    })
-    .catch((error) => {
-      logFirebaseError(error);
-    });
-  }else{
-    alert("Already signed in!");
-  }
-}
-
+//Deletes account from firebase
 function deleteaccount() {
   if (confirm('Are you sure you want to delete your account?')) {
     const user = firebase.auth().currentUser;
+    //delete all their comments and replies
       deleteComments(curName);
       user.delete().then(() => {
         alert("Deleted!");
         logout();
       }).catch((error) => {
-        logFirebaseError(error)
+        console.log(error);
+        alert(error);
       });
   } else {
     // Do nothing!
-    console.log('Thing was not saved to the database.');
   }
 }
 
+//Deletes all their comments and replies
 function deleteComments(userName){
-  console.log(userName);
+    //Deletes all comments
     db.collection("comments").where("createdby", "==", userName)
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((comment) => {
-          console.log("comment");
-            db.collection("comments").doc(comment.id).delete();
+          db.collection("comments").doc(comment.id).delete();
         })
     }).catch((error) => {
-      logFirebaseError(error);
+      console.log(error);
+      alert(error);
   });
+  //Deletes all replies
   db.collection("replies").where("createdby", "==", userName)
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((reply) => {
-        console.log("reply");
-          db.collection("replies").doc(reply.id).delete();
+        db.collection("replies").doc(reply.id).delete();
       })
   }).catch((error) => {
-    logFirebaseError(error);
+    console.log(error);
+    alert(error);
   })
 }
 
+//Logs out user
 function logout() {
   if (currentUser != null) {
     firebase.auth().signOut().then(() => {
       alert("Logged out!");
-      var navbar = document.getElementsByClassName("navbar")[0];
-      console.log(navbar);
-      console.log(navbar.lastChild);
-      navbar.children[navbar.children.length - 1].innerText = "Profile";
-      if (navbar.children.length == 3){
-        navbar.children[1].remove();
-      }
       currentUser = null;
       localStorage.setItem("storedUser", null);
       location.reload();
     }).catch((error) => {
-      logFirebaseError(error)
+      console.log(error);
+      alert(error);
     });
 
   }else{
@@ -102,6 +90,7 @@ function logout() {
   }
 }
 
+//Changes the display name attached to the user
 function submitDisplayName() {
   const user = firebase.auth().currentUser;
   user.updateProfile({
@@ -112,10 +101,12 @@ function submitDisplayName() {
     location.reload();
     alert("Updated account succesfully!")
   }).catch((error) => {
-    logFirebaseError(error);
+    console.log(error);
+    alert(error);
   });  
 }
 
+//Changes the color value in the collecton with the id equal to the user's uid
 function submitDisplayColor() {
   const user = firebase.auth().currentUser;
   
@@ -128,7 +119,8 @@ function submitDisplayColor() {
     alert("Updated account succesfully!");
   } )
   .catch((error) => {
-      logFirebaseError(error);
+      console.log(error);
+alert(error);
   });
 
 }
@@ -137,16 +129,18 @@ function submitDisplayColor() {
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 var uiConfig = {
   callbacks: {
+    //on success update user, then redirect to the home page (returning true brings you to the signInSuccessUrl) 
     signInSuccessWithAuthResult: function(authResult, redirectUrl) {
       console.log(authResult);
       currentUser = authResult.user;
       localStorage.setItem('storedUser', JSON.stringify(authResult.user));
+
       alert("Signed In");
       return true;
     },
     uiShown: function() {
       // The widget is rendered.
-      // Hide the loader.
+      //Change the visuals to have the same font and change its size
       document.getElementsByClassName("firebaseui-idp-text")[0].innerText = "Sign in/up with Google"
       var parEle = document.getElementsByClassName("firebaseui-idp-text")[0].parentElement
       parEle.setAttribute("style", parEle.getAttribute("style") + ";max-width: 240px;");
@@ -162,4 +156,5 @@ var uiConfig = {
 
 };
 
+//magic that creates teh UI and all its handlers, handled by firebase
 ui.start('#firebaseui-auth-container', uiConfig);
