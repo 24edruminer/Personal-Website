@@ -60,7 +60,7 @@ function loadFirebasePage(){
                 if (currentUser != null && postLikes.includes(currentUser.uid)){
                     document.getElementById("heart").classList.toggle("press");
                 }
-                //set liek count
+                //set like count
                 document.getElementById("likedbycount").innerText = "Likes: " + postLikes.length;
             }
             //format the body text to allow my embed system
@@ -303,14 +303,14 @@ function loadComments(postID) {
                     element.appendChild(replyContainer);
                     
                 });
-            //finished loading so show the body
-            document.getElementsByTagName("body")[0].classList.remove("hidden");
+
             }).catch((error) => {
                 console.log(error);
             });
 
         });
-
+        //finished loading so show the body
+        document.getElementsByTagName("body")[0].classList.remove("hidden");
     })
     .catch((error) => {
         console.log(error)
@@ -535,6 +535,7 @@ function deleteComment(docID, buttonElement){
     }
     parentElement.remove();
     removeCommentItem(parentElement, false);    
+    location.reload();
 }
 
 //remove a comment or reply from the databse (using the attirbute "iscomment"), if ignoreMessage = true then dont show an alert (used when batch deleting replies)
@@ -545,7 +546,6 @@ function removeCommentItem(element, ignoreMessage) {
             if (ignoreMessage == false){
                 alert("Deleted your comment!");
             }
-            location.reload();
         }).catch((error) => {
             console.log(error);
         });
@@ -554,7 +554,6 @@ function removeCommentItem(element, ignoreMessage) {
             if (ignoreMessage == false){
                 alert("Deleted your reply!");
             }
-            location.reload();
         }).catch((error) => {
             console.log(error);
         });
