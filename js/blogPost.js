@@ -268,11 +268,11 @@ function loadComments(postID) {
 
                     const createdby = document.createElement("p");
                     createdby.classList.add("comment--title");
-                    createdby.innerText = doc.data().createdbydisp + "(";
+                    createdby.innerText = reply.data().createdbydisp + "(";
                     //make the actual email in a span inside parenthesis for editing its style easily
                     //make the default color of the actual email lighter
                     const createdbyactual = document.createElement("span");
-                    createdbyactual.innerText = doc.data().createdbyactual;
+                    createdbyactual.innerText = reply.data().createdbyactual;
                     createdbyactual.setAttribute("style", "color: #888");
                     createdby.appendChild(createdbyactual);
         
@@ -282,7 +282,7 @@ function loadComments(postID) {
                     createdby.appendChild(ender);
         
                     //load the colors, if no document exists and data is null then the elements will default to black
-                    db.collection("usercolor").doc(doc.data().createdUID).get().then((colorData) => {
+                    db.collection("usercolor").doc(reply.data().createdUID).get().then((colorData) => {
                         console.log(colorData.data());
                         createdby.setAttribute("style", "margin: 0 0 0 0; color: " + (colorData.data() || {color: "#000000"}).color + ";");
                         ender.setAttribute("style", "display: inline; margin: 0 0 0 0; color: " + (colorData.data() || {color: "#000000"}).color + ";");
@@ -535,7 +535,6 @@ function deleteComment(docID, buttonElement){
     }
     parentElement.remove();
     removeCommentItem(parentElement, false);    
-    location.reload();
 }
 
 //remove a comment or reply from the databse (using the attirbute "iscomment"), if ignoreMessage = true then dont show an alert (used when batch deleting replies)
