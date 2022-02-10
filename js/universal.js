@@ -25,11 +25,10 @@ const db = firebase.firestore();
 currentUser = null;
 curName = null;
 
-function universalSetup(callback, onNotLoggedIn) {
+function universalSetup(callback, onNotLoggedIn, onColorGot) {
   //load the user
-  getStoredUser(callback, onNotLoggedIn);
+  getStoredUser(callback, onNotLoggedIn, onColorGot);
 
-  console.log("uhejhsd", currentUser);
   //If your signed out remove things you dont want to see and create a listener to check for sign-in
   if (currentUser == null){
     var navbar = document.getElementsByClassName("navbar")[0];
@@ -52,7 +51,7 @@ function universalSetup(callback, onNotLoggedIn) {
   for(i=0; i<textfields.length; i++){
       textfields[i].addEventListener("keydown", function(e) {
         //this is needed so that we get the length after the edit, not before
-          setTimeout(() => {document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerText.length}, 10);
+          setTimeout(() => {document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerText.length - 1}, 10);
           if(this.innerText.length > this.getAttribute("max")){
               e.preventDefault();
               //in case the input somehow exceeded 25 characters reset it back to 25
@@ -64,7 +63,7 @@ function universalSetup(callback, onNotLoggedIn) {
   }
 }
 
-function getStoredUser(callback, onNotLoggedIn){
+function getStoredUser(callback, onNotLoggedIn, onColorGot){
   currentUser = JSON.parse(localStorage.getItem('storedUser'));
   //used to not repeat callback twice, also used to instantly check if callback isnt null which saves some time later
   var doCallback = callback != null; 
@@ -74,12 +73,18 @@ function getStoredUser(callback, onNotLoggedIn){
     db.collection("usercolor").doc(currentUser.uid).get().then((doc) => {
       if (doc.data() != null) {
         currentUser.currentColor = (doc.data().color || "#000000");
+      }else{
+       currentUser.currentColor = "#000000";   
+      }
+      //if onColorGot do callback only after query has finished
+      if (doCallback && onColorGot) {
+        callback();   
       }
     }).catch((error) => {
         console.log(error);
         alert(error);
     });
-    if (doCallback) {
+    if (doCallback && !onColorGot) {
       callback();
     }
 
