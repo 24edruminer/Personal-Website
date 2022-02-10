@@ -52,8 +52,8 @@ function universalSetup(callback, onNotLoggedIn) {
   for(i=0; i<textfields.length; i++){
       textfields[i].addEventListener("keydown", function(e) {
         //this is needed so that we get the length after the edit, not before
-          setTimeout(() => {document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerHTML.length}, 10);
-          if(this.innerHTML.length > this.getAttribute("max")){
+          setTimeout(() => {document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerText.length}, 10);
+          if(this.innerText.length > this.getAttribute("max")){
               e.preventDefault();
               //in case the input somehow exceeded 25 characters reset it back to 25
               this.innerText = this.innerText.substring(0,24);
