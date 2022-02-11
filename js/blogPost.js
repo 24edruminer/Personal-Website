@@ -336,8 +336,11 @@ function editPost(docId, postBody){
     //set up the input field to how we want and set its value to what was submited in the post before
     newContainer.querySelector("#bodyfield").innerText = postBody;
     newContainer.querySelector("#bodyfield").classList.add("edit--input");
+    //no max size on post text so remove the constrictor class
+    newContainer.querySelector("#bodyfield").classList.remove("namefield--input");
     newContainer.querySelector("#bodyfield").setAttribute("style", "width: 75vw;");
     newContainer.querySelector("#bodyfield").setAttribute("id", "editpostfield");
+
 
     //submit the post
     var submitButton = newContainer.querySelector("#submit");
@@ -358,6 +361,9 @@ function editPost(docId, postBody){
 
     //inserts it into the reply field so its where it should be
     parentElement.insertBefore(centerParent, mainChildren[parentIndex + 3]);
+
+    //No max size on post size so remove the length element
+    parentElement.querySelector("#curLengthID").parentElement.remove();
 }
 
 //Destroy any objects with the id editpost--container and reshows the body text
@@ -456,9 +462,13 @@ function setReplyField(docId, buttonElement) {
     newContainer.setAttribute("id", "reply--container");
     newContainer.classList.add("reply--container");
 
-    newContainer.querySelector("#bodyfield").innerText = "";
-    newContainer.querySelector("#bodyfield").classList.add("reply--input");
-    newContainer.querySelector("#bodyfield").setAttribute("id", "replyfield");
+    var bodyField = newContainer.querySelector("#bodyfield");
+    bodyField.innerText = "";
+    //setup length constraints
+    bodyField.setAttribute("curlengthid", "curLengthCommentReplyPost");
+    bodyField.addEventListener("keydown", textfieldCheck, false);    
+    bodyField.classList.add("reply--input");
+    bodyField.setAttribute("id", "replyfield");
 
     var submitButton = newContainer.querySelector("#submit");
     submitButton.classList.add("reply--submit");
@@ -474,6 +484,10 @@ function setReplyField(docId, buttonElement) {
 
     //put the reply field below the comment it is replying to
     parentElement.parentNode.insertBefore(newContainer, commentContainerChildren[parentIndex + 1]);
+
+    //setup length constraints
+    parentElement.parentNode.querySelector("#curLengthID").innerText = 0;
+    parentElement.parentNode.querySelector("#curLengthID").setAttribute("id", "curLengthCommentReplyPost");
 }
 
 //destory any reply--cotnaienr objects
@@ -572,9 +586,13 @@ function editComment(docId, buttonElement, initialValue){
     newContainer.setAttribute("id", "edit--container");
     newContainer.classList.add("edit--container");
 
-    newContainer.querySelector("#bodyfield").innerText = initialValue;
-    newContainer.querySelector("#bodyfield").classList.add("edit--input");
-    newContainer.querySelector("#bodyfield").setAttribute("id", "editfield");
+    var bodyField = newContainer.querySelector("#bodyfield");
+    bodyField.innerText = initialValue;
+    bodyField.classList.add("edit--input");
+    //setup length constraints
+    bodyField.setAttribute("curlengthid", "curLengthCommentEdit");
+    bodyField.addEventListener("keydown", textfieldCheck, false);
+    bodyField.setAttribute("id", "editfield");
 
     var submitButton = newContainer.querySelector("#submit");
     submitButton.classList.add("reply--submit");
@@ -590,6 +608,10 @@ function editComment(docId, buttonElement, initialValue){
 
     //put the edit field inside the comment container
     parentElement.appendChild(newContainer);
+
+    //setup length constraints
+    parentElement.querySelector("#curLengthID").innerText = initialValue.length;
+    parentElement.querySelector("#curLengthID").setAttribute("id", "curLengthCommentEdit");
 }
 
 //construct the reply edit field
@@ -605,9 +627,13 @@ function editReply(docId, buttonElement, initialValue){
     newContainer.setAttribute("id", "editreply--container");
     newContainer.classList.add("edit--container");
 
-    newContainer.querySelector("#bodyfield").innerText = initialValue;
-    newContainer.querySelector("#bodyfield").classList.add("editreply--input");
-    newContainer.querySelector("#bodyfield").setAttribute("id", "editreplyfield");
+    var bodyField = newContainer.querySelector("#bodyfield");
+    bodyField.innerText = initialValue;
+    bodyField.classList.add("editreply--input");
+    //setup length constraints
+    bodyField.setAttribute("curlengthid", "curLengthCommentReply");
+    bodyField.addEventListener("keydown", textfieldCheck, false);    
+    bodyField.setAttribute("id", "editreplyfield");
 
     var submitButton = newContainer.querySelector("#submit");
     submitButton.classList.add("reply--submit");
@@ -623,6 +649,10 @@ function editReply(docId, buttonElement, initialValue){
 
     //put the edit container inside the reply container
     parentElement.appendChild(newContainer);
+
+    //setup length constraints
+    parentElement.querySelector("#curLengthID").innerText = initialValue.length;
+    parentElement.querySelector("#curLengthID").setAttribute("id", "curLengthCommentReply");
 }
 
 //remove all editreply--container objects

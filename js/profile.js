@@ -1,10 +1,3 @@
-//Allows the loading of the color before it sets up the values
-function callback() {
-  setTimeout(() => {
-    profileSetup();
-  }, 400)
-}
-
 //Set the pre-loaded values of the profile page from data stored in the database 
 function profileSetup() {
   if (currentUser != null || curName != null){
@@ -15,7 +8,7 @@ function profileSetup() {
     }
     //setup fields with user's data
     document.getElementById("namefield").innerText = dispname;
-    document.getElementById("curLengthID").innerText = dispname.length;
+    document.getElementById("curLengthID").innerText = dispname.length ;
     document.getElementById("colorselector").value = currentUser.currentColor || "#000000";
   }else{
     //if not signed in then remove fields relating to signed in user data

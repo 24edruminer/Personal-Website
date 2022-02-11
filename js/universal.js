@@ -49,18 +49,29 @@ function universalSetup(callback, onNotLoggedIn, onColorGot) {
   //Setup listener for having a textfield with a character limit (as seen on the profile page)
   var textfields = document.getElementsByClassName("namefield--input"); 
   for(i=0; i<textfields.length; i++){
-      textfields[i].addEventListener("keydown", function(e) {
-        //this is needed so that we get the length after the edit, not before
-          setTimeout(() => {document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerText.length - 1}, 10);
-          if(this.innerText.length > this.getAttribute("max")){
-              e.preventDefault();
-              //in case the input somehow exceeded 25 characters reset it back to 25
-              this.innerText = this.innerText.substring(0,24);
-              alert("Too many characters!");
-              return false;
-          }
-      }, false);
+      textfields[i].addEventListener("keydown", textfieldCheck, false);
   }
+}
+
+//textfield check for the event listener
+function textfieldCheck(input) {
+    //this is needed so that we get the length after the edit, not before
+      setTimeout(() => {
+      //if the length is >= max then dont allow an input, but ignore if pressing a non character key (ctrl, alt, etc.) 
+        if(this.innerText.length > parseInt(this.getAttribute("max")) && input.key.match(/^[\W|\w]$/)){
+          input.preventDefault();
+            //in case the input somehow exceeded 25 characters reset it back to 25
+            this.innerText = this.innerText.substring(0,parseInt(this.getAttribute("max")) - 1);
+            alert("Too many characters!");
+        }
+      document.getElementById(this.getAttribute("curLengthID")).innerText = this.innerText.length
+    }, 10);
+      //if the key pressed is non alpha-numeric prevent it
+      if (input.key.match(this.getAttribute("pattern")) || input.key == "Enter") {
+        input.preventDefault();
+        alert(this.getAttribute("invalidmessage"));
+      }
+
 }
 
 function getStoredUser(callback, onNotLoggedIn, onColorGot){

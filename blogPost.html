@@ -53,12 +53,16 @@
                 <ul id="comments--container" class="comments--container">
                 </ul>
                 <div id="submit--container">
-                    <div style="display:block;">
-                        <center>
-                            <p><span class="body--input" role="textbox" id="bodyfield" contenteditable></span></p>
+                    <div style="display:block; position: relative;">
+                        <center style="display: inline-block">
+                            <span class="body--input namefield--input" role="textbox" id="bodyfield" max="250" curLengthID="curLengthID" invalidmessage="Invalid Input" pattern="^\\" contenteditable></span>
                         </center>
+                        <div style="display: inline-block">
+                            <p id="curLengthID" style="display: inline-block; color: grey; text-align: right; align-self: right;">0</p>
+                            <p style="display: inline-block; color: grey; text-align: right; align-self: right;">/250</p>
+                        </div>
                     </div>
-                    <button id="submit" style="height: 40px; margin: 10px;" class="confirmbutton greenbutton" onclick="submitComment()">
+                    <button id="submit" style="height: 40px; margin: 20px;" class="confirmbutton greenbutton" onclick="submitComment()">
                         Submit
                     </button>
                 </div>
